@@ -53,9 +53,10 @@ data "aws_secretsmanager_secret_version" "db_creds" {
 
 # After importing the secrets storing into Locals
 
+/*
 locals {
   db_creds = jsondecode(data.aws_secretsmanager_secret_version.db_creds.secret_string)
-}
+}*/
 
 # ------------------------------------------------------------------------------
 # PREPARES THE EC2 INSTANCES TERMPLATE FOR LAUNCHING
@@ -107,7 +108,7 @@ data "aws_ami" "amzlinux2" {
 resource "random_password" "password" {
   length           = 16
   special          = true
-  override_special = "_%@"
+  override_special = "#*^_-"
 }
 
 # Creating a AWS secret for database master account (Masteraccoundb)
