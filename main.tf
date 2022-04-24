@@ -51,13 +51,6 @@ data "aws_secretsmanager_secret_version" "db_creds" {
   secret_id = data.aws_secretsmanager_secret.db_creds.id
 }
 
-# After importing the secrets storing into Locals
-
-/*
-locals {
-  db_creds = jsondecode(data.aws_secretsmanager_secret_version.db_creds.secret_string)
-}*/
-
 # ------------------------------------------------------------------------------
 # PREPARES THE EC2 INSTANCES TERMPLATE FOR LAUNCHING
 # ------------------------------------------------------------------------------

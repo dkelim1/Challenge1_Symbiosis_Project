@@ -1,0 +1,50 @@
+pipeline {
+  agent any
+    
+  parameters {
+    gitParameter branchFilter: 'origin/(.*)', defaultValue: 'main', name: 'BRANCH', type: 'PT_BRANCH'
+  }
+    
+  tools {
+  terraform 'terraform'
+  }
+  
+  stages{
+      stage('Clone Code Repository') {
+        steps {
+            git branch: "${BRANCH}", url: "${GITHUB_REPO}"
+        }
+      }
+      stage('Terraform Init'){
+          steps{
+              withAWS(credentials: 'AWS_CREDENTIALS', region: "${REGION}") {
+              sh 'cd ${WORKSPACE}; terraform init'
+              }
+          }
+      }
+      stage('Terraform Plan'){
+          steps{
+              withAWS(credentials: 'AWS_CREDENTIALS', region: "${REGION}") {
+              sh 'cd ${WORKSPACE}'
+              sh 'terraform workspace select ${ENVIRONMENT}'
+              }
+              withCredentials([sshUserPrivateKey(credentialsId: 'terraform-key', keyFileVariable: 'SSH_KEY')]){
+              sh 'mkdir ./private-key; cp "$SSH_KEY" ./private-key/terraform-key.pem'
+              }
+              withAWS(credentials: 'AWS_CREDENTIALS', region: "${REGION}") {
+              sh 'cd ${WORKSPACE}'
+              sh 'terraform plan'
+              }
+          }
+      }
+      stage('Execute Terraform Action') {
+          steps {
+              withAWS(credentials: 'AWS_CREDENTIALS', region: "${REGION}") {
+              sh 'cd ${WORKSPACE}'
+              sh 'echo Executing terraform action to ${TF_ACTION}...'
+              sh 'terraform ${TF_ACTION} -auto-approve'
+              }
+          }
+      }
+  }
+} 

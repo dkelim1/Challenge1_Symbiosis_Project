@@ -1,27 +1,74 @@
 README
---------
+=======
 
-This project runs a simple NodeJS application in Auto Scaling Group (ASG) with an Elastic Load Balancer attached.  The NodeJS application connects to a MySQL database to add/modify user' s age and email etc.  
+This project runs a simple NodeJS application in an Auto Scaling Group (ASG) with an Elastic Load Balancer attached.  The NodeJS application connects to a MySQL database to add/modify user' s age and email etc.  
 Dynamic Automatic Scaling is also enabled which monitors the average CPU utilization against a defined threshold and scales accordingly once the threshold is exceeded.   
+
+
+Assignment deliverables
+1. An architecture diagram that would suit the needs of the above case study
+   > Refer to the Symbiosis_2T_Arch_Diagram.pdf file deposited in the repository (Repository URL defined under item 2 below).  
+
+2. An implementation of the said architecture in any IaC framework (i.e terraform). You can choose any application to host in your implementation. A good example of a webapp that does CRUD operations can also be found here: https://github.com/chapagain/nodejs-mysql-crud.
+   > https://github.com/dkelim1/Challenge1_Symbiosis_Project.git
+     
+     Refer to implementation procedures below.  
+
+3. Create a CICD workflow to deploy the above application to production in an automated way. There are 3 environments - DEV, UAT, Production. Choose a tool of your choice.
+   > Refer to the folder CICD for the Jenkinsfile and artefacts.  Currently, the CICD workflow is launched from a Jenkins pod running within minikube.  If chances permit, a demo can be presented onsite together with 
+     the optional challenge.  Future enhancement will include triggering the CICD workflow directly from GitHub with Jenkins polling for changes in the GitHub repository.  
+
+4. Create an API to expose data saved in the database via services of your choosing, making sure the APIs are secure.
+   > This will be incorporated in the future release.  
+
+5. How would you monitor and what metrics would you use
+   > The monitoring will be done from the CloudWatch interface with alarms created and triggered when certain conditions are met.  Some of the objects like loadbalancers, EC2 and ECS etc have a 'Monitoring' tab which 
+     statistics can be observed real-time.  
+
+     The metrics to monitor(at least some of the notable ones) defined below:-
+     
+     ELB: TargetResponseTime, RequestCount, HTTPCode_Target_4XX_Count, HTTPCode_Target_5XX_Count, HTTPCode_ELB_4XX_Count, HTTPCode_ELB_5XX_Count, ForwardedInvalidRequestCount, ActiveConnectionCount, HealthyHostCount, UnHealthyHostCount
+     EC2 Instances: CPUUtilization, StatusCheckFailed_Instance, StatusCheckFailed_System, DiskReadOps, DiskReadBytes, DiskWriteOps, DiskWriteBytes, NetworkIn, NetworkOut
+     RDS:  CPUUtilization, FreeableMemory, SwapUsage, FreeStorageSpace, DiskQueueDepth, WriteThroughput, WriteLatency, ReadThroughput, ReadLatency,  DatabaseConnections, NetworkTransmitThroughput, NetworkReceiveThroughput
+
+
 
 Pre-requisites:
 
-a. Prepare private keys for access to EC2 instances via SSH clients (Eg, Putty, Tectia SSH) from local computer.
-
-	Under EC2 service in AWS console, under “Network and Security/Key Pairs”, download the private key to the ‘private-key’ folder.
-	The filename must be terraform-key.pem and secure it with permission 600 as follow.  
-
-	Note that this assumes that a key pair already exist in the AWS console.  Since there are 3 environments, there should be 3 sets of key pairs.  
-  But for simplicity sake, in this demo we will use one common set of key pairs.  
-
-	➜  Symbiosis_Project git:(main) ✗ ls -al private-key
-	total 8
-	drwxr-xr-x   3 desmondlim  staff    96 Apr 12 21:17 .
-	drwxr-xr-x  19 desmondlim  staff   608 Apr 19 23:28 ..
-	-rw-------@  1 desmondlim  staff  1674 Apr  2 23:16 terraform-key.pem
+a. AWS Security Credentials Setup with Admin rights properly setup and Access key created. 
+   https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html
 
 
-Build the AWS Infrastructure:
+b. Ensure that the necessary S3 buckets and DynamoDB table are in place to hold the remote state information.  
+
+    Code snipplet from main.tf [  
+
+    bucket = "dl-symbiosis-tf-state"                  <- Create the S3 bucket in AWS console.  Change to a different name as needed in main.tf
+    key    = "project/symbiosis_tf/terraform.tfstate"
+    region = "ap-southeast-1"                         
+
+    dynamodb_table = "dl-symbiosis-tf-state-locking"  <- Create the DynamoDB table in AWS console.  Change to a different name as needed in main.tf
+
+    ]
+
+c. Prepare private key for bastion host to access internal EC2 instances.  
+
+	 Under EC2 service in AWS console, under “Network and Security/Key Pairs”, download the private key to the ‘private-key’ folder.
+	 The filename must be terraform-key.pem and secure it with permission 600 as follow.  
+
+	 Note that this assumes that a key pair already exist in the AWS console.  Since there are 3 environments, there should be 3 sets of key pairs.  
+   But for simplicity sake, in this demo we will use one common set of key pairs.  
+
+	 ➜  Symbiosis_Project git:(main) ✗ ls -al private-key
+	 total 8
+	 drwxr-xr-x   3 desmondlim  staff    96 Apr 12 21:17 .
+	 drwxr-xr-x  19 desmondlim  staff   608 Apr 19 23:28 ..
+	 -rw-------@  1 desmondlim  staff  1674 Apr  2 23:16 terraform-key.pem
+
+
+
+Implementation of Symbiosis Infrastructure on AWS (Manual Way)
+===============================================================
 
 0.  Clone the project folder locally.  Then ensure pre-requisites mentioned above are met.    
 
@@ -271,15 +318,3 @@ Terraform will perform the following actions:
 ………
 ………. Output truncated for brevity …………..
 
-
-Future updates:
-
-Note that the following changes will be incorporated in future releases.  
-
-3. Create a CICD workflow to deploy the above application to production in an automated way. There are 3 environments - DEV, UAT, Production. Choose a tool of your choice.
-4. Create an API to expose data saved in the database via services of your choosing, making sure the APIs are secure.
- 
-5. How would you monitor and what metrics would you use
-   The monitoring will be done from the CloudWatch interface with alarms created when certain conditions are met.  
-
-   The metrics to monitor are :- 

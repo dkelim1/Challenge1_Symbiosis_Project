@@ -1,0 +1,2561 @@
+Started by user Jenkins Admin
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Still waiting to schedule task
+Waiting for next available executor
+Agent default-567p1 is provisioned from template default
+---
+apiVersion: "v1"
+kind: "Pod"
+metadata:
+  labels:
+    jenkins/jenkins-jenkins-agent: "true"
+    jenkins/label-digest: "500b4f18aee87616849e4f4c2435020898e34aa0"
+    jenkins/label: "jenkins-jenkins-agent"
+  name: "default-567p1"
+spec:
+  containers:
+  - args:
+    - "********"
+    - "default-567p1"
+    env:
+    - name: "JENKINS_SECRET"
+      value: "********"
+    - name: "JENKINS_TUNNEL"
+      value: "jenkins-agent.jenkins.svc.cluster.local:50000"
+    - name: "JENKINS_AGENT_NAME"
+      value: "default-567p1"
+    - name: "JENKINS_NAME"
+      value: "default-567p1"
+    - name: "JENKINS_AGENT_WORKDIR"
+      value: "/home/jenkins/agent"
+    - name: "JENKINS_URL"
+      value: "http://jenkins.jenkins.svc.cluster.local:8080/"
+    image: "jenkins/inbound-agent:4.11.2-4"
+    imagePullPolicy: "IfNotPresent"
+    name: "jnlp"
+    resources:
+      limits:
+        memory: "512Mi"
+        cpu: "512m"
+      requests:
+        memory: "512Mi"
+        cpu: "512m"
+    tty: false
+    volumeMounts:
+    - mountPath: "/home/jenkins/agent"
+      name: "workspace-volume"
+      readOnly: false
+    workingDir: "/home/jenkins/agent"
+  nodeSelector:
+    kubernetes.io/os: "linux"
+  restartPolicy: "Never"
+  serviceAccountName: "default"
+  volumes:
+  - emptyDir:
+      medium: ""
+    name: "workspace-volume"
+
+Running on default-567p1 in /home/jenkins/agent/workspace/terraform-demo
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Tool Install)
+[Pipeline] tool
+Unpacking https://releases.hashicorp.com/terraform/1.1.9/terraform_1.1.9_linux_amd64.zip to /home/jenkins/agent/tools/org.jenkinsci.plugins.terraform.TerraformInstallation/terraform on default-567p1
+[Pipeline] envVarsForTool
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Clone Code Repository)
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/dkelim1/Challenge1_Symbiosis_Project.git
+ > git init /home/jenkins/agent/workspace/terraform-demo # timeout=10
+Fetching upstream changes from https://github.com/dkelim1/Challenge1_Symbiosis_Project.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.30.2'
+ > git fetch --tags --force --progress -- https://github.com/dkelim1/Challenge1_Symbiosis_Project.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+Checking out Revision 329b6a72b3485a7ddeaa66bcd2aa8c9da0f2d449 (refs/remotes/origin/main)
+ > git config remote.origin.url https://github.com/dkelim1/Challenge1_Symbiosis_Project.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 329b6a72b3485a7ddeaa66bcd2aa8c9da0f2d449 # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git checkout -b main 329b6a72b3485a7ddeaa66bcd2aa8c9da0f2d449 # timeout=10
+Commit message: "update main.tf"
+ > git rev-list --no-walk 329b6a72b3485a7ddeaa66bcd2aa8c9da0f2d449 # timeout=10
+[Checks API] No suitable checks publisher found.
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Terraform Init)
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withAWS
+Constructing AWS CredentialsSetting AWS region ap-southeast-1 
+[Pipeline] {
+[Pipeline] sh
++ cd /home/jenkins/agent/workspace/terraform-demo
++ terraform init
+[0m[1mInitializing modules...[0m
+- vars in modules/vars
+Downloading registry.terraform.io/terraform-aws-modules/vpc/aws 3.0.0 for vpc...
+- vpc in .terraform/modules/vpc
+
+[0m[1mInitializing the backend...[0m
+[0m[32m
+Successfully configured the backend "s3"! Terraform will automatically
+use this backend unless the backend configuration changes.[0m
+
+[0m[1mInitializing provider plugins...[0m
+- Finding hashicorp/aws versions matching ">= 3.15.0, < 4.0.0"...
+- Finding latest version of hashicorp/random...
+- Finding latest version of hashicorp/template...
+- Installing hashicorp/random v3.1.3...
+- Installed hashicorp/random v3.1.3 (signed by HashiCorp)
+- Installing hashicorp/template v2.2.0...
+- Installed hashicorp/template v2.2.0 (signed by HashiCorp)
+- Installing hashicorp/aws v3.75.1...
+- Installed hashicorp/aws v3.75.1 (signed by HashiCorp)
+
+Terraform has created a lock file [1m.terraform.lock.hcl[0m to record the provider
+selections it made above. Include this file in your version control repository
+so that Terraform can guarantee to make the same selections by default when
+you run "terraform init" in the future.[0m
+
+[0m[1m[32mTerraform has been successfully initialized![0m[32m[0m
+[0m[32m
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.[0m
+[Pipeline] }
+[Pipeline] // withAWS
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Terraform Plan)
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withAWS
+Constructing AWS CredentialsSetting AWS region ap-southeast-1 
+[Pipeline] {
+[Pipeline] sh
++ cd /home/jenkins/agent/workspace/terraform-demo
+[Pipeline] sh
++ terraform workspace select dev
+[0m[32mSwitched to workspace "dev".[0m
+[Pipeline] }
+[Pipeline] // withAWS
+[Pipeline] withCredentials
+Masking supported pattern matches of $SSH_KEY
+[Pipeline] {
+[Pipeline] sh
++ mkdir ./private-key
++ cp **** ./private-key/terraform-key.pem
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] withAWS
+Constructing AWS CredentialsSetting AWS region ap-southeast-1 
+[Pipeline] {
+[Pipeline] sh
++ cd /home/jenkins/agent/workspace/terraform-demo
+[Pipeline] sh
++ terraform plan
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [32m+[0m create
+ [36m<=[0m read (data resources)
+[0m
+Terraform will perform the following actions:
+
+[1m  # data.aws_secretsmanager_secret.db_creds[0m will be read during apply
+  # (config refers to values not yet known)[0m[0m
+[0m [36m<=[0m[0m data "aws_secretsmanager_secret" "db_creds"  {
+      [32m+[0m [0m[1m[0marn[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mdescription[0m[0m         = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m                  = (known after apply)
+      [32m+[0m [0m[1m[0mkms_key_id[0m[0m          = (known after apply)
+      [32m+[0m [0m[1m[0mname[0m[0m                = (known after apply)
+      [32m+[0m [0m[1m[0mpolicy[0m[0m              = (known after apply)
+      [32m+[0m [0m[1m[0mrotation_enabled[0m[0m    = (known after apply)
+      [32m+[0m [0m[1m[0mrotation_lambda_arn[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mrotation_rules[0m[0m      = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                = (known after apply)
+    }
+
+[1m  # data.aws_secretsmanager_secret_version.db_creds[0m will be read during apply
+  # (config refers to values not yet known)[0m[0m
+[0m [36m<=[0m[0m data "aws_secretsmanager_secret_version" "db_creds"  {
+      [32m+[0m [0m[1m[0marn[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0msecret_binary[0m[0m  = (sensitive value)
+      [32m+[0m [0m[1m[0msecret_id[0m[0m      = (known after apply)
+      [32m+[0m [0m[1m[0msecret_string[0m[0m  = (sensitive value)
+      [32m+[0m [0m[1m[0mversion_id[0m[0m     = (known after apply)
+      [32m+[0m [0m[1m[0mversion_stages[0m[0m = (known after apply)
+    }
+
+[1m  # data.template_file.backend_cloud_init[0m will be read during apply
+  # (config refers to values not yet known)[0m[0m
+[0m [36m<=[0m[0m data "template_file" "backend_cloud_init"  {
+      [32m+[0m [0m[1m[0mid[0m[0m       = (known after apply)
+      [32m+[0m [0m[1m[0mrendered[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mtemplate[0m[0m = <<-EOT
+            #!/bin/bash
+            
+            set -x
+            yum update -y
+            yum install -y git mysql telnet
+            
+            
+            cat << EOF > /tmp/schema.sql
+            
+            -- create database symbiosdb;
+            
+            use symbiosdb;
+            
+            CREATE TABLE IF NOT EXISTS users (
+            id int(11) NOT NULL auto_increment,
+            name varchar(100) NOT NULL,
+            age int(3) NOT NULL,
+            email varchar(100) NOT NULL,
+            PRIMARY KEY (id)
+            );
+            
+            EOF
+            
+            ssh -N -L ${DB_PORT}:127.0.0.1:${DB_PORT} ${DB_USER}@${DB_HOST} &
+            mysql --host=${DB_HOST} --port=${DB_PORT} --user=${DB_USER} --password=${DB_PASSWD} < /tmp/schema.sql
+            
+            
+            mkdir /app
+            git clone https://github.com/dkelim1/nodejs-mysql-crud.git /app
+            
+            
+            curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash -
+            yum install -y nodejs
+            
+            
+            cat << EOF > /app/config.js
+            
+            var config = {
+            	database: {
+            		host:	  '${DB_HOST}', 	// database host
+            		user: 	  '${DB_USER}', 		// your database username
+            		password: '${DB_PASSWD}', 		// your database password
+            		port: 	  '${DB_PORT}', 		// default MySQL port
+            		db: 	  '${DB_NAME}' 		// your database name
+            	},
+            	server: {
+            		host: '*',
+            		port: '3000'
+            	}
+            }
+            
+            module.exports = config
+            
+            EOF
+            
+            cd /app; node app.js &
+        EOT
+      [32m+[0m [0m[1m[0mvars[0m[0m     = {
+          [32m+[0m [0m"DB_HOST"   = (known after apply)
+          [32m+[0m [0m"DB_NAME"   = "symbiosdb"
+          [32m+[0m [0m"DB_PASSWD" = (known after apply)
+          [32m+[0m [0m"DB_PORT"   = (known after apply)
+          [32m+[0m [0m"DB_USER"   = (known after apply)
+        }
+    }
+
+[1m  # aws_autoscaling_group.webapps_asg[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_autoscaling_group" "webapps_asg" {
+      [32m+[0m [0m[1m[0marn[0m[0m                       = (known after apply)
+      [32m+[0m [0m[1m[0mavailability_zones[0m[0m        = (known after apply)
+      [32m+[0m [0m[1m[0mdefault_cooldown[0m[0m          = (known after apply)
+      [32m+[0m [0m[1m[0mdesired_capacity[0m[0m          = (known after apply)
+      [32m+[0m [0m[1m[0mforce_delete[0m[0m              = false
+      [32m+[0m [0m[1m[0mforce_delete_warm_pool[0m[0m    = false
+      [32m+[0m [0m[1m[0mhealth_check_grace_period[0m[0m = 300
+      [32m+[0m [0m[1m[0mhealth_check_type[0m[0m         = "EC2"
+      [32m+[0m [0m[1m[0mid[0m[0m                        = (known after apply)
+      [32m+[0m [0m[1m[0mlaunch_configuration[0m[0m      = (known after apply)
+      [32m+[0m [0m[1m[0mload_balancers[0m[0m            = [
+          [32m+[0m [0m"webapps-dev-elb",
+        ]
+      [32m+[0m [0m[1m[0mmax_size[0m[0m                  = 4
+      [32m+[0m [0m[1m[0mmetrics_granularity[0m[0m       = "1Minute"
+      [32m+[0m [0m[1m[0mmin_size[0m[0m                  = 2
+      [32m+[0m [0m[1m[0mname[0m[0m                      = (known after apply)
+      [32m+[0m [0m[1m[0mname_prefix[0m[0m               = "symbios-webapps-dev-asg"
+      [32m+[0m [0m[1m[0mprotect_from_scale_in[0m[0m     = false
+      [32m+[0m [0m[1m[0mservice_linked_role_arn[0m[0m   = (known after apply)
+      [32m+[0m [0m[1m[0mvpc_zone_identifier[0m[0m       = (known after apply)
+      [32m+[0m [0m[1m[0mwait_for_capacity_timeout[0m[0m = "10m"
+
+      [32m+[0m [0mtag {
+          [32m+[0m [0m[1m[0mkey[0m[0m                 = "Name"
+          [32m+[0m [0m[1m[0mpropagate_at_launch[0m[0m = true
+          [32m+[0m [0m[1m[0mvalue[0m[0m               = "symbios-webapps-asg"
+        }
+    }
+
+[1m  # aws_autoscaling_policy.cpu[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_autoscaling_policy" "cpu" {
+      [32m+[0m [0m[1m[0marn[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0mautoscaling_group_name[0m[0m  = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m                      = (known after apply)
+      [32m+[0m [0m[1m[0mmetric_aggregation_type[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mname[0m[0m                    = "cpu"
+      [32m+[0m [0m[1m[0mpolicy_type[0m[0m             = "TargetTrackingScaling"
+
+      [32m+[0m [0mtarget_tracking_configuration {
+          [32m+[0m [0m[1m[0mdisable_scale_in[0m[0m = false
+          [32m+[0m [0m[1m[0mtarget_value[0m[0m     = 70
+
+          [32m+[0m [0mpredefined_metric_specification {
+              [32m+[0m [0m[1m[0mpredefined_metric_type[0m[0m = "ASGAverageCPUUtilization"
+            }
+        }
+    }
+
+[1m  # aws_db_instance.mysql_rds[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_db_instance" "mysql_rds" {
+      [32m+[0m [0m[1m[0maddress[0m[0m                               = (known after apply)
+      [32m+[0m [0m[1m[0mallocated_storage[0m[0m                     = 10
+      [32m+[0m [0m[1m[0mapply_immediately[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0marn[0m[0m                                   = (known after apply)
+      [32m+[0m [0m[1m[0mauto_minor_version_upgrade[0m[0m            = true
+      [32m+[0m [0m[1m[0mavailability_zone[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0mbackup_retention_period[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mbackup_window[0m[0m                         = (known after apply)
+      [32m+[0m [0m[1m[0mca_cert_identifier[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mcharacter_set_name[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mcopy_tags_to_snapshot[0m[0m                 = false
+      [32m+[0m [0m[1m[0mdb_subnet_group_name[0m[0m                  = "symbiosis_vpc_dev"
+      [32m+[0m [0m[1m[0mdelete_automated_backups[0m[0m              = true
+      [32m+[0m [0m[1m[0mendpoint[0m[0m                              = (known after apply)
+      [32m+[0m [0m[1m[0mengine[0m[0m                                = "mysql"
+      [32m+[0m [0m[1m[0mengine_version[0m[0m                        = (known after apply)
+      [32m+[0m [0m[1m[0mengine_version_actual[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mhosted_zone_id[0m[0m                        = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m                                    = (known after apply)
+      [32m+[0m [0m[1m[0midentifier[0m[0m                            = (known after apply)
+      [32m+[0m [0m[1m[0midentifier_prefix[0m[0m                     = "mysql-rds-dev"
+      [32m+[0m [0m[1m[0minstance_class[0m[0m                        = "db.t2.micro"
+      [32m+[0m [0m[1m[0mkms_key_id[0m[0m                            = (known after apply)
+      [32m+[0m [0m[1m[0mlatest_restorable_time[0m[0m                = (known after apply)
+      [32m+[0m [0m[1m[0mlicense_model[0m[0m                         = (known after apply)
+      [32m+[0m [0m[1m[0mmaintenance_window[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mmonitoring_interval[0m[0m                   = 0
+      [32m+[0m [0m[1m[0mmonitoring_role_arn[0m[0m                   = (known after apply)
+      [32m+[0m [0m[1m[0mmulti_az[0m[0m                              = true
+      [32m+[0m [0m[1m[0mname[0m[0m                                  = "symbiosdb"
+      [32m+[0m [0m[1m[0mnchar_character_set_name[0m[0m              = (known after apply)
+      [32m+[0m [0m[1m[0moption_group_name[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0mparameter_group_name[0m[0m                  = (known after apply)
+      [32m+[0m [0m[1m[0mpassword[0m[0m                              = (sensitive value)
+      [32m+[0m [0m[1m[0mperformance_insights_enabled[0m[0m          = false
+      [32m+[0m [0m[1m[0mperformance_insights_kms_key_id[0m[0m       = (known after apply)
+      [32m+[0m [0m[1m[0mperformance_insights_retention_period[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mport[0m[0m                                  = (known after apply)
+      [32m+[0m [0m[1m[0mpublicly_accessible[0m[0m                   = false
+      [32m+[0m [0m[1m[0mreplicas[0m[0m                              = (known after apply)
+      [32m+[0m [0m[1m[0mresource_id[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mskip_final_snapshot[0m[0m                   = true
+      [32m+[0m [0m[1m[0msnapshot_identifier[0m[0m                   = (known after apply)
+      [32m+[0m [0m[1m[0mstatus[0m[0m                                = (known after apply)
+      [32m+[0m [0m[1m[0mstorage_type[0m[0m                          = (known after apply)
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                              = (known after apply)
+      [32m+[0m [0m[1m[0mtimezone[0m[0m                              = (known after apply)
+      [32m+[0m [0m[1m[0musername[0m[0m                              = (known after apply)
+      [32m+[0m [0m[1m[0mvpc_security_group_ids[0m[0m                = (known after apply)
+    }
+
+[1m  # aws_elb.webapps_elb[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_elb" "webapps_elb" {
+      [32m+[0m [0m[1m[0marn[0m[0m                         = (known after apply)
+      [32m+[0m [0m[1m[0mavailability_zones[0m[0m          = (known after apply)
+      [32m+[0m [0m[1m[0mconnection_draining[0m[0m         = false
+      [32m+[0m [0m[1m[0mconnection_draining_timeout[0m[0m = 300
+      [32m+[0m [0m[1m[0mcross_zone_load_balancing[0m[0m   = true
+      [32m+[0m [0m[1m[0mdesync_mitigation_mode[0m[0m      = "defensive"
+      [32m+[0m [0m[1m[0mdns_name[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m                          = (known after apply)
+      [32m+[0m [0m[1m[0midle_timeout[0m[0m                = 60
+      [32m+[0m [0m[1m[0minstances[0m[0m                   = (known after apply)
+      [32m+[0m [0m[1m[0minternal[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mname[0m[0m                        = "webapps-dev-elb"
+      [32m+[0m [0m[1m[0msecurity_groups[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0msource_security_group[0m[0m       = (known after apply)
+      [32m+[0m [0m[1m[0msource_security_group_id[0m[0m    = (known after apply)
+      [32m+[0m [0m[1m[0msubnets[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mzone_id[0m[0m                     = (known after apply)
+
+      [32m+[0m [0mhealth_check {
+          [32m+[0m [0m[1m[0mhealthy_threshold[0m[0m   = 2
+          [32m+[0m [0m[1m[0minterval[0m[0m            = 30
+          [32m+[0m [0m[1m[0mtarget[0m[0m              = "HTTP:3000/"
+          [32m+[0m [0m[1m[0mtimeout[0m[0m             = 25
+          [32m+[0m [0m[1m[0munhealthy_threshold[0m[0m = 10
+        }
+
+      [32m+[0m [0mlistener {
+          [32m+[0m [0m[1m[0minstance_port[0m[0m     = 3000
+          [32m+[0m [0m[1m[0minstance_protocol[0m[0m = "http"
+          [32m+[0m [0m[1m[0mlb_port[0m[0m           = 80
+          [32m+[0m [0m[1m[0mlb_protocol[0m[0m       = "http"
+        }
+    }
+
+[1m  # aws_instance.bastion_host[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_instance" "bastion_host" {
+      [32m+[0m [0m[1m[0mami[0m[0m                                  = "ami-0cc8dc7a69cd8b547"
+      [32m+[0m [0m[1m[0marn[0m[0m                                  = (known after apply)
+      [32m+[0m [0m[1m[0massociate_public_ip_address[0m[0m          = (known after apply)
+      [32m+[0m [0m[1m[0mavailability_zone[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mcpu_core_count[0m[0m                       = (known after apply)
+      [32m+[0m [0m[1m[0mcpu_threads_per_core[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mdisable_api_termination[0m[0m              = (known after apply)
+      [32m+[0m [0m[1m[0mebs_optimized[0m[0m                        = (known after apply)
+      [32m+[0m [0m[1m[0mget_password_data[0m[0m                    = false
+      [32m+[0m [0m[1m[0mhost_id[0m[0m                              = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m                                   = (known after apply)
+      [32m+[0m [0m[1m[0minstance_initiated_shutdown_behavior[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0minstance_state[0m[0m                       = (known after apply)
+      [32m+[0m [0m[1m[0minstance_type[0m[0m                        = "t2.micro"
+      [32m+[0m [0m[1m[0mipv6_address_count[0m[0m                   = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_addresses[0m[0m                       = (known after apply)
+      [32m+[0m [0m[1m[0mkey_name[0m[0m                             = "terraform-key"
+      [32m+[0m [0m[1m[0mmonitoring[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0moutpost_arn[0m[0m                          = (known after apply)
+      [32m+[0m [0m[1m[0mpassword_data[0m[0m                        = (known after apply)
+      [32m+[0m [0m[1m[0mplacement_group[0m[0m                      = (known after apply)
+      [32m+[0m [0m[1m[0mplacement_partition_number[0m[0m           = (known after apply)
+      [32m+[0m [0m[1m[0mprimary_network_interface_id[0m[0m         = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_dns[0m[0m                          = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_ip[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mpublic_dns[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mpublic_ip[0m[0m                            = (known after apply)
+      [32m+[0m [0m[1m[0msecondary_private_ips[0m[0m                = (known after apply)
+      [32m+[0m [0m[1m[0msecurity_groups[0m[0m                      = (known after apply)
+      [32m+[0m [0m[1m[0msource_dest_check[0m[0m                    = true
+      [32m+[0m [0m[1m[0msubnet_id[0m[0m                            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                                 = {
+          [32m+[0m [0m"Name" = "symbios-dev-bastion-host"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                             = {
+          [32m+[0m [0m"Name" = "symbios-dev-bastion-host"
+        }
+      [32m+[0m [0m[1m[0mtenancy[0m[0m                              = (known after apply)
+      [32m+[0m [0m[1m[0muser_data[0m[0m                            = "fd7b05789d58781f5afb647cfb351b0e62d081b5"
+      [32m+[0m [0m[1m[0muser_data_base64[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0mvpc_security_group_ids[0m[0m               = (known after apply)
+
+      [32m+[0m [0mcapacity_reservation_specification {
+          [32m+[0m [0m[1m[0mcapacity_reservation_preference[0m[0m = (known after apply)
+
+          [32m+[0m [0mcapacity_reservation_target {
+              [32m+[0m [0m[1m[0mcapacity_reservation_id[0m[0m = (known after apply)
+            }
+        }
+
+      [32m+[0m [0mebs_block_device {
+          [32m+[0m [0m[1m[0mdelete_on_termination[0m[0m = (known after apply)
+          [32m+[0m [0m[1m[0mdevice_name[0m[0m           = (known after apply)
+          [32m+[0m [0m[1m[0mencrypted[0m[0m             = (known after apply)
+          [32m+[0m [0m[1m[0miops[0m[0m                  = (known after apply)
+          [32m+[0m [0m[1m[0mkms_key_id[0m[0m            = (known after apply)
+          [32m+[0m [0m[1m[0msnapshot_id[0m[0m           = (known after apply)
+          [32m+[0m [0m[1m[0mtags[0m[0m                  = (known after apply)
+          [32m+[0m [0m[1m[0mthroughput[0m[0m            = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_id[0m[0m             = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_size[0m[0m           = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_type[0m[0m           = (known after apply)
+        }
+
+      [32m+[0m [0menclave_options {
+          [32m+[0m [0m[1m[0menabled[0m[0m = (known after apply)
+        }
+
+      [32m+[0m [0mephemeral_block_device {
+          [32m+[0m [0m[1m[0mdevice_name[0m[0m  = (known after apply)
+          [32m+[0m [0m[1m[0mno_device[0m[0m    = (known after apply)
+          [32m+[0m [0m[1m[0mvirtual_name[0m[0m = (known after apply)
+        }
+
+      [32m+[0m [0mmetadata_options {
+          [32m+[0m [0m[1m[0mhttp_endpoint[0m[0m               = (known after apply)
+          [32m+[0m [0m[1m[0mhttp_put_response_hop_limit[0m[0m = (known after apply)
+          [32m+[0m [0m[1m[0mhttp_tokens[0m[0m                 = (known after apply)
+          [32m+[0m [0m[1m[0minstance_metadata_tags[0m[0m      = (known after apply)
+        }
+
+      [32m+[0m [0mnetwork_interface {
+          [32m+[0m [0m[1m[0mdelete_on_termination[0m[0m = (known after apply)
+          [32m+[0m [0m[1m[0mdevice_index[0m[0m          = (known after apply)
+          [32m+[0m [0m[1m[0mnetwork_interface_id[0m[0m  = (known after apply)
+        }
+
+      [32m+[0m [0mroot_block_device {
+          [32m+[0m [0m[1m[0mdelete_on_termination[0m[0m = (known after apply)
+          [32m+[0m [0m[1m[0mdevice_name[0m[0m           = (known after apply)
+          [32m+[0m [0m[1m[0mencrypted[0m[0m             = (known after apply)
+          [32m+[0m [0m[1m[0miops[0m[0m                  = (known after apply)
+          [32m+[0m [0m[1m[0mkms_key_id[0m[0m            = (known after apply)
+          [32m+[0m [0m[1m[0mtags[0m[0m                  = (known after apply)
+          [32m+[0m [0m[1m[0mthroughput[0m[0m            = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_id[0m[0m             = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_size[0m[0m           = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_type[0m[0m           = (known after apply)
+        }
+    }
+
+[1m  # aws_launch_configuration.webapps_lc[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_launch_configuration" "webapps_lc" {
+      [32m+[0m [0m[1m[0marn[0m[0m                         = (known after apply)
+      [32m+[0m [0m[1m[0massociate_public_ip_address[0m[0m = false
+      [32m+[0m [0m[1m[0mebs_optimized[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0menable_monitoring[0m[0m           = true
+      [32m+[0m [0m[1m[0mid[0m[0m                          = (known after apply)
+      [32m+[0m [0m[1m[0mimage_id[0m[0m                    = "ami-0cc8dc7a69cd8b547"
+      [32m+[0m [0m[1m[0minstance_type[0m[0m               = "t2.micro"
+      [32m+[0m [0m[1m[0mkey_name[0m[0m                    = "terraform-key"
+      [32m+[0m [0m[1m[0mname[0m[0m                        = (known after apply)
+      [32m+[0m [0m[1m[0mname_prefix[0m[0m                 = "symbios-webapps-dev-lc"
+      [32m+[0m [0m[1m[0msecurity_groups[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0muser_data[0m[0m                   = (known after apply)
+
+      [32m+[0m [0mebs_block_device {
+          [32m+[0m [0m[1m[0mdelete_on_termination[0m[0m = (known after apply)
+          [32m+[0m [0m[1m[0mdevice_name[0m[0m           = (known after apply)
+          [32m+[0m [0m[1m[0mencrypted[0m[0m             = (known after apply)
+          [32m+[0m [0m[1m[0miops[0m[0m                  = (known after apply)
+          [32m+[0m [0m[1m[0mno_device[0m[0m             = (known after apply)
+          [32m+[0m [0m[1m[0msnapshot_id[0m[0m           = (known after apply)
+          [32m+[0m [0m[1m[0mthroughput[0m[0m            = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_size[0m[0m           = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_type[0m[0m           = (known after apply)
+        }
+
+      [32m+[0m [0mmetadata_options {
+          [32m+[0m [0m[1m[0mhttp_endpoint[0m[0m               = (known after apply)
+          [32m+[0m [0m[1m[0mhttp_put_response_hop_limit[0m[0m = (known after apply)
+          [32m+[0m [0m[1m[0mhttp_tokens[0m[0m                 = (known after apply)
+        }
+
+      [32m+[0m [0mroot_block_device {
+          [32m+[0m [0m[1m[0mdelete_on_termination[0m[0m = (known after apply)
+          [32m+[0m [0m[1m[0mencrypted[0m[0m             = (known after apply)
+          [32m+[0m [0m[1m[0miops[0m[0m                  = (known after apply)
+          [32m+[0m [0m[1m[0mthroughput[0m[0m            = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_size[0m[0m           = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_type[0m[0m           = (known after apply)
+        }
+    }
+
+[1m  # aws_secretsmanager_secret.db_creds[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_secretsmanager_secret" "db_creds" {
+      [32m+[0m [0m[1m[0marn[0m[0m                            = (known after apply)
+      [32m+[0m [0m[1m[0mforce_overwrite_replica_secret[0m[0m = false
+      [32m+[0m [0m[1m[0mid[0m[0m                             = (known after apply)
+      [32m+[0m [0m[1m[0mname[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mname_prefix[0m[0m                    = "dev-db-creds"
+      [32m+[0m [0m[1m[0mpolicy[0m[0m                         = (known after apply)
+      [32m+[0m [0m[1m[0mrecovery_window_in_days[0m[0m        = 0
+      [32m+[0m [0m[1m[0mrotation_enabled[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mrotation_lambda_arn[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                       = (known after apply)
+
+      [32m+[0m [0mreplica {
+          [32m+[0m [0m[1m[0mkms_key_id[0m[0m         = (known after apply)
+          [32m+[0m [0m[1m[0mlast_accessed_date[0m[0m = (known after apply)
+          [32m+[0m [0m[1m[0mregion[0m[0m             = (known after apply)
+          [32m+[0m [0m[1m[0mstatus[0m[0m             = (known after apply)
+          [32m+[0m [0m[1m[0mstatus_message[0m[0m     = (known after apply)
+        }
+
+      [32m+[0m [0mrotation_rules {
+          [32m+[0m [0m[1m[0mautomatically_after_days[0m[0m = (known after apply)
+        }
+    }
+
+[1m  # aws_secretsmanager_secret_version.db_creds[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_secretsmanager_secret_version" "db_creds" {
+      [32m+[0m [0m[1m[0marn[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0msecret_id[0m[0m      = (known after apply)
+      [32m+[0m [0m[1m[0msecret_string[0m[0m  = (sensitive value)
+      [32m+[0m [0m[1m[0mversion_id[0m[0m     = (known after apply)
+      [32m+[0m [0m[1m[0mversion_stages[0m[0m = (known after apply)
+    }
+
+[1m  # aws_security_group.apps_instance_sg[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_security_group" "apps_instance_sg" {
+      [32m+[0m [0m[1m[0marn[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mdescription[0m[0m            = "Managed by Terraform"
+      [32m+[0m [0m[1m[0megress[0m[0m                 = [
+          [32m+[0m [0m{
+              [32m+[0m [0mcidr_blocks      = [
+                  [32m+[0m [0m"0.0.0.0/0",
+                ]
+              [32m+[0m [0mdescription      = ""
+              [32m+[0m [0mfrom_port        = 0
+              [32m+[0m [0mipv6_cidr_blocks = [
+                  [32m+[0m [0m"::/0",
+                ]
+              [32m+[0m [0mprefix_list_ids  = []
+              [32m+[0m [0mprotocol         = "-1"
+              [32m+[0m [0msecurity_groups  = []
+              [32m+[0m [0mself             = false
+              [32m+[0m [0mto_port          = 0
+            },
+        ]
+      [32m+[0m [0m[1m[0mid[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0mingress[0m[0m                = [
+          [32m+[0m [0m{
+              [32m+[0m [0mcidr_blocks      = []
+              [32m+[0m [0mdescription      = ""
+              [32m+[0m [0mfrom_port        = 22
+              [32m+[0m [0mipv6_cidr_blocks = []
+              [32m+[0m [0mprefix_list_ids  = []
+              [32m+[0m [0mprotocol         = "tcp"
+              [32m+[0m [0msecurity_groups  = (known after apply)
+              [32m+[0m [0mself             = false
+              [32m+[0m [0mto_port          = 22
+            },
+          [32m+[0m [0m{
+              [32m+[0m [0mcidr_blocks      = []
+              [32m+[0m [0mdescription      = ""
+              [32m+[0m [0mfrom_port        = 3000
+              [32m+[0m [0mipv6_cidr_blocks = []
+              [32m+[0m [0mprefix_list_ids  = []
+              [32m+[0m [0mprotocol         = "tcp"
+              [32m+[0m [0msecurity_groups  = (known after apply)
+              [32m+[0m [0mself             = false
+              [32m+[0m [0mto_port          = 3000
+            },
+        ]
+      [32m+[0m [0m[1m[0mname[0m[0m                   = "apps-instance-dev-sg"
+      [32m+[0m [0m[1m[0mname_prefix[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mowner_id[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mrevoke_rules_on_delete[0m[0m = false
+      [32m+[0m [0m[1m[0mtags_all[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                 = (known after apply)
+    }
+
+[1m  # aws_security_group.bastion_host_sg[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_security_group" "bastion_host_sg" {
+      [32m+[0m [0m[1m[0marn[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mdescription[0m[0m            = "Managed by Terraform"
+      [32m+[0m [0m[1m[0megress[0m[0m                 = [
+          [32m+[0m [0m{
+              [32m+[0m [0mcidr_blocks      = [
+                  [32m+[0m [0m"0.0.0.0/0",
+                ]
+              [32m+[0m [0mdescription      = ""
+              [32m+[0m [0mfrom_port        = 0
+              [32m+[0m [0mipv6_cidr_blocks = [
+                  [32m+[0m [0m"::/0",
+                ]
+              [32m+[0m [0mprefix_list_ids  = []
+              [32m+[0m [0mprotocol         = "-1"
+              [32m+[0m [0msecurity_groups  = []
+              [32m+[0m [0mself             = false
+              [32m+[0m [0mto_port          = 0
+            },
+        ]
+      [32m+[0m [0m[1m[0mid[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0mingress[0m[0m                = [
+          [32m+[0m [0m{
+              [32m+[0m [0mcidr_blocks      = [
+                  [32m+[0m [0m"0.0.0.0/0",
+                ]
+              [32m+[0m [0mdescription      = ""
+              [32m+[0m [0mfrom_port        = 22
+              [32m+[0m [0mipv6_cidr_blocks = []
+              [32m+[0m [0mprefix_list_ids  = []
+              [32m+[0m [0mprotocol         = "tcp"
+              [32m+[0m [0msecurity_groups  = []
+              [32m+[0m [0mself             = false
+              [32m+[0m [0mto_port          = 22
+            },
+        ]
+      [32m+[0m [0m[1m[0mname[0m[0m                   = "bastion-host-dev-sg"
+      [32m+[0m [0m[1m[0mname_prefix[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mowner_id[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mrevoke_rules_on_delete[0m[0m = false
+      [32m+[0m [0m[1m[0mtags_all[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                 = (known after apply)
+    }
+
+[1m  # aws_security_group.elb_sg[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_security_group" "elb_sg" {
+      [32m+[0m [0m[1m[0marn[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mdescription[0m[0m            = "Managed by Terraform"
+      [32m+[0m [0m[1m[0megress[0m[0m                 = [
+          [32m+[0m [0m{
+              [32m+[0m [0mcidr_blocks      = [
+                  [32m+[0m [0m"0.0.0.0/0",
+                ]
+              [32m+[0m [0mdescription      = ""
+              [32m+[0m [0mfrom_port        = 0
+              [32m+[0m [0mipv6_cidr_blocks = []
+              [32m+[0m [0mprefix_list_ids  = []
+              [32m+[0m [0mprotocol         = "-1"
+              [32m+[0m [0msecurity_groups  = []
+              [32m+[0m [0mself             = false
+              [32m+[0m [0mto_port          = 0
+            },
+        ]
+      [32m+[0m [0m[1m[0mid[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0mingress[0m[0m                = [
+          [32m+[0m [0m{
+              [32m+[0m [0mcidr_blocks      = [
+                  [32m+[0m [0m"0.0.0.0/0",
+                ]
+              [32m+[0m [0mdescription      = ""
+              [32m+[0m [0mfrom_port        = 80
+              [32m+[0m [0mipv6_cidr_blocks = []
+              [32m+[0m [0mprefix_list_ids  = []
+              [32m+[0m [0mprotocol         = "tcp"
+              [32m+[0m [0msecurity_groups  = []
+              [32m+[0m [0mself             = false
+              [32m+[0m [0mto_port          = 80
+            },
+        ]
+      [32m+[0m [0m[1m[0mname[0m[0m                   = "elb-dev-sg"
+      [32m+[0m [0m[1m[0mname_prefix[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mowner_id[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mrevoke_rules_on_delete[0m[0m = false
+      [32m+[0m [0m[1m[0mtags_all[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                 = (known after apply)
+    }
+
+[1m  # aws_security_group.mysqldb_sg[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_security_group" "mysqldb_sg" {
+      [32m+[0m [0m[1m[0marn[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mdescription[0m[0m            = "Managed by Terraform"
+      [32m+[0m [0m[1m[0megress[0m[0m                 = [
+          [32m+[0m [0m{
+              [32m+[0m [0mcidr_blocks      = [
+                  [32m+[0m [0m"0.0.0.0/0",
+                ]
+              [32m+[0m [0mdescription      = ""
+              [32m+[0m [0mfrom_port        = 0
+              [32m+[0m [0mipv6_cidr_blocks = []
+              [32m+[0m [0mprefix_list_ids  = []
+              [32m+[0m [0mprotocol         = "-1"
+              [32m+[0m [0msecurity_groups  = []
+              [32m+[0m [0mself             = false
+              [32m+[0m [0mto_port          = 0
+            },
+        ]
+      [32m+[0m [0m[1m[0mid[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0mingress[0m[0m                = [
+          [32m+[0m [0m{
+              [32m+[0m [0mcidr_blocks      = []
+              [32m+[0m [0mdescription      = ""
+              [32m+[0m [0mfrom_port        = 3306
+              [32m+[0m [0mipv6_cidr_blocks = []
+              [32m+[0m [0mprefix_list_ids  = []
+              [32m+[0m [0mprotocol         = "tcp"
+              [32m+[0m [0msecurity_groups  = (known after apply)
+              [32m+[0m [0mself             = false
+              [32m+[0m [0mto_port          = 3306
+            },
+        ]
+      [32m+[0m [0m[1m[0mname[0m[0m                   = "mysqldb-dev-sg"
+      [32m+[0m [0m[1m[0mname_prefix[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mowner_id[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mrevoke_rules_on_delete[0m[0m = false
+      [32m+[0m [0m[1m[0mtags_all[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                 = (known after apply)
+    }
+
+[1m  # random_password.password[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "random_password" "password" {
+      [32m+[0m [0m[1m[0mid[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mlength[0m[0m           = 16
+      [32m+[0m [0m[1m[0mlower[0m[0m            = true
+      [32m+[0m [0m[1m[0mmin_lower[0m[0m        = 0
+      [32m+[0m [0m[1m[0mmin_numeric[0m[0m      = 0
+      [32m+[0m [0m[1m[0mmin_special[0m[0m      = 0
+      [32m+[0m [0m[1m[0mmin_upper[0m[0m        = 0
+      [32m+[0m [0m[1m[0mnumber[0m[0m           = true
+      [32m+[0m [0m[1m[0moverride_special[0m[0m = "#*^_-"
+      [32m+[0m [0m[1m[0mresult[0m[0m           = (sensitive value)
+      [32m+[0m [0m[1m[0mspecial[0m[0m          = true
+      [32m+[0m [0m[1m[0mupper[0m[0m            = true
+    }
+
+[1m  # module.vpc.aws_db_subnet_group.database[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_db_subnet_group" "database" {
+      [32m+[0m [0m[1m[0marn[0m[0m         = (known after apply)
+      [32m+[0m [0m[1m[0mdescription[0m[0m = "Database subnet group for symbiosis_vpc_dev"
+      [32m+[0m [0m[1m[0mid[0m[0m          = (known after apply)
+      [32m+[0m [0m[1m[0mname[0m[0m        = "symbiosis_vpc_dev"
+      [32m+[0m [0m[1m[0mname_prefix[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0msubnet_ids[0m[0m  = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m        = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m    = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+    }
+
+[1m  # module.vpc.aws_eip.nat[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_eip" "nat" {
+      [32m+[0m [0m[1m[0mallocation_id[0m[0m        = (known after apply)
+      [32m+[0m [0m[1m[0massociation_id[0m[0m       = (known after apply)
+      [32m+[0m [0m[1m[0mcarrier_ip[0m[0m           = (known after apply)
+      [32m+[0m [0m[1m[0mcustomer_owned_ip[0m[0m    = (known after apply)
+      [32m+[0m [0m[1m[0mdomain[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m                   = (known after apply)
+      [32m+[0m [0m[1m[0minstance[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0mnetwork_border_group[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mnetwork_interface[0m[0m    = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_dns[0m[0m          = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_ip[0m[0m           = (known after apply)
+      [32m+[0m [0m[1m[0mpublic_dns[0m[0m           = (known after apply)
+      [32m+[0m [0m[1m[0mpublic_ip[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mpublic_ipv4_pool[0m[0m     = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                 = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-ap-southeast-1a"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m             = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-ap-southeast-1a"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc[0m[0m                  = true
+    }
+
+[1m  # module.vpc.aws_internet_gateway.this[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_internet_gateway" "this" {
+      [32m+[0m [0m[1m[0marn[0m[0m      = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m       = (known after apply)
+      [32m+[0m [0m[1m[0mowner_id[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m     = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m   = (known after apply)
+    }
+
+[1m  # module.vpc.aws_nat_gateway.this[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_nat_gateway" "this" {
+      [32m+[0m [0m[1m[0mallocation_id[0m[0m        = (known after apply)
+      [32m+[0m [0m[1m[0mconnectivity_type[0m[0m    = "public"
+      [32m+[0m [0m[1m[0mid[0m[0m                   = (known after apply)
+      [32m+[0m [0m[1m[0mnetwork_interface_id[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_ip[0m[0m           = (known after apply)
+      [32m+[0m [0m[1m[0mpublic_ip[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0msubnet_id[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                 = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-ap-southeast-1a"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m             = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-ap-southeast-1a"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+    }
+
+[1m  # module.vpc.aws_route.private_nat_gateway[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route" "private_nat_gateway" {
+      [32m+[0m [0m[1m[0mdestination_cidr_block[0m[0m = "0.0.0.0/0"
+      [32m+[0m [0m[1m[0mid[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0minstance_id[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0minstance_owner_id[0m[0m      = (known after apply)
+      [32m+[0m [0m[1m[0mnat_gateway_id[0m[0m         = (known after apply)
+      [32m+[0m [0m[1m[0mnetwork_interface_id[0m[0m   = (known after apply)
+      [32m+[0m [0m[1m[0morigin[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mroute_table_id[0m[0m         = (known after apply)
+      [32m+[0m [0m[1m[0mstate[0m[0m                  = (known after apply)
+
+      [32m+[0m [0mtimeouts {
+          [32m+[0m [0m[1m[0mcreate[0m[0m = "5m"
+        }
+    }
+
+[1m  # module.vpc.aws_route.public_internet_gateway[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route" "public_internet_gateway" {
+      [32m+[0m [0m[1m[0mdestination_cidr_block[0m[0m = "0.0.0.0/0"
+      [32m+[0m [0m[1m[0mgateway_id[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0minstance_id[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0minstance_owner_id[0m[0m      = (known after apply)
+      [32m+[0m [0m[1m[0mnetwork_interface_id[0m[0m   = (known after apply)
+      [32m+[0m [0m[1m[0morigin[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mroute_table_id[0m[0m         = (known after apply)
+      [32m+[0m [0m[1m[0mstate[0m[0m                  = (known after apply)
+
+      [32m+[0m [0mtimeouts {
+          [32m+[0m [0m[1m[0mcreate[0m[0m = "5m"
+        }
+    }
+
+[1m  # module.vpc.aws_route_table.database[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route_table" "database" {
+      [32m+[0m [0m[1m[0marn[0m[0m              = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mowner_id[0m[0m         = (known after apply)
+      [32m+[0m [0m[1m[0mpropagating_vgws[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mroute[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m             = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-db"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m         = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-db"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m           = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table.private[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route_table" "private" {
+      [32m+[0m [0m[1m[0marn[0m[0m              = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mowner_id[0m[0m         = (known after apply)
+      [32m+[0m [0m[1m[0mpropagating_vgws[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mroute[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m             = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-private"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m         = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-private"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m           = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table.public[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route_table" "public" {
+      [32m+[0m [0m[1m[0marn[0m[0m              = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mowner_id[0m[0m         = (known after apply)
+      [32m+[0m [0m[1m[0mpropagating_vgws[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mroute[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m             = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-public"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m         = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-public"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m           = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table_association.database[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route_table_association" "database" {
+      [32m+[0m [0m[1m[0mid[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0mroute_table_id[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0msubnet_id[0m[0m      = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table_association.database[1][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route_table_association" "database" {
+      [32m+[0m [0m[1m[0mid[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0mroute_table_id[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0msubnet_id[0m[0m      = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table_association.private[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route_table_association" "private" {
+      [32m+[0m [0m[1m[0mid[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0mroute_table_id[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0msubnet_id[0m[0m      = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table_association.private[1][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route_table_association" "private" {
+      [32m+[0m [0m[1m[0mid[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0mroute_table_id[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0msubnet_id[0m[0m      = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table_association.public[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route_table_association" "public" {
+      [32m+[0m [0m[1m[0mid[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0mroute_table_id[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0msubnet_id[0m[0m      = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table_association.public[1][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route_table_association" "public" {
+      [32m+[0m [0m[1m[0mid[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0mroute_table_id[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0msubnet_id[0m[0m      = (known after apply)
+    }
+
+[1m  # module.vpc.aws_subnet.database[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_subnet" "database" {
+      [32m+[0m [0m[1m[0marn[0m[0m                                            = (known after apply)
+      [32m+[0m [0m[1m[0massign_ipv6_address_on_creation[0m[0m                = false
+      [32m+[0m [0m[1m[0mavailability_zone[0m[0m                              = "ap-southeast-1a"
+      [32m+[0m [0m[1m[0mavailability_zone_id[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mcidr_block[0m[0m                                     = "10.0.121.0/24"
+      [32m+[0m [0m[1m[0menable_dns64[0m[0m                                   = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_a_record_on_launch[0m[0m    = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_aaaa_record_on_launch[0m[0m = false
+      [32m+[0m [0m[1m[0mid[0m[0m                                             = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_cidr_block_association_id[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_native[0m[0m                                    = false
+      [32m+[0m [0m[1m[0mmap_public_ip_on_launch[0m[0m                        = false
+      [32m+[0m [0m[1m[0mowner_id[0m[0m                                       = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_dns_hostname_type_on_launch[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                                           = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-db-ap-southeast-1a"
+          [32m+[0m [0m"Type"        = "Private Database Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                                       = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-db-ap-southeast-1a"
+          [32m+[0m [0m"Type"        = "Private Database Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                                         = (known after apply)
+    }
+
+[1m  # module.vpc.aws_subnet.database[1][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_subnet" "database" {
+      [32m+[0m [0m[1m[0marn[0m[0m                                            = (known after apply)
+      [32m+[0m [0m[1m[0massign_ipv6_address_on_creation[0m[0m                = false
+      [32m+[0m [0m[1m[0mavailability_zone[0m[0m                              = "ap-southeast-1b"
+      [32m+[0m [0m[1m[0mavailability_zone_id[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mcidr_block[0m[0m                                     = "10.0.122.0/24"
+      [32m+[0m [0m[1m[0menable_dns64[0m[0m                                   = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_a_record_on_launch[0m[0m    = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_aaaa_record_on_launch[0m[0m = false
+      [32m+[0m [0m[1m[0mid[0m[0m                                             = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_cidr_block_association_id[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_native[0m[0m                                    = false
+      [32m+[0m [0m[1m[0mmap_public_ip_on_launch[0m[0m                        = false
+      [32m+[0m [0m[1m[0mowner_id[0m[0m                                       = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_dns_hostname_type_on_launch[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                                           = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-db-ap-southeast-1b"
+          [32m+[0m [0m"Type"        = "Private Database Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                                       = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-db-ap-southeast-1b"
+          [32m+[0m [0m"Type"        = "Private Database Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                                         = (known after apply)
+    }
+
+[1m  # module.vpc.aws_subnet.private[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_subnet" "private" {
+      [32m+[0m [0m[1m[0marn[0m[0m                                            = (known after apply)
+      [32m+[0m [0m[1m[0massign_ipv6_address_on_creation[0m[0m                = false
+      [32m+[0m [0m[1m[0mavailability_zone[0m[0m                              = "ap-southeast-1a"
+      [32m+[0m [0m[1m[0mavailability_zone_id[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mcidr_block[0m[0m                                     = "10.0.1.0/24"
+      [32m+[0m [0m[1m[0menable_dns64[0m[0m                                   = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_a_record_on_launch[0m[0m    = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_aaaa_record_on_launch[0m[0m = false
+      [32m+[0m [0m[1m[0mid[0m[0m                                             = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_cidr_block_association_id[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_native[0m[0m                                    = false
+      [32m+[0m [0m[1m[0mmap_public_ip_on_launch[0m[0m                        = false
+      [32m+[0m [0m[1m[0mowner_id[0m[0m                                       = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_dns_hostname_type_on_launch[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                                           = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-private-ap-southeast-1a"
+          [32m+[0m [0m"Type"        = "Private Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                                       = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-private-ap-southeast-1a"
+          [32m+[0m [0m"Type"        = "Private Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                                         = (known after apply)
+    }
+
+[1m  # module.vpc.aws_subnet.private[1][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_subnet" "private" {
+      [32m+[0m [0m[1m[0marn[0m[0m                                            = (known after apply)
+      [32m+[0m [0m[1m[0massign_ipv6_address_on_creation[0m[0m                = false
+      [32m+[0m [0m[1m[0mavailability_zone[0m[0m                              = "ap-southeast-1b"
+      [32m+[0m [0m[1m[0mavailability_zone_id[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mcidr_block[0m[0m                                     = "10.0.2.0/24"
+      [32m+[0m [0m[1m[0menable_dns64[0m[0m                                   = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_a_record_on_launch[0m[0m    = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_aaaa_record_on_launch[0m[0m = false
+      [32m+[0m [0m[1m[0mid[0m[0m                                             = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_cidr_block_association_id[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_native[0m[0m                                    = false
+      [32m+[0m [0m[1m[0mmap_public_ip_on_launch[0m[0m                        = false
+      [32m+[0m [0m[1m[0mowner_id[0m[0m                                       = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_dns_hostname_type_on_launch[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                                           = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-private-ap-southeast-1b"
+          [32m+[0m [0m"Type"        = "Private Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                                       = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-private-ap-southeast-1b"
+          [32m+[0m [0m"Type"        = "Private Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                                         = (known after apply)
+    }
+
+[1m  # module.vpc.aws_subnet.public[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_subnet" "public" {
+      [32m+[0m [0m[1m[0marn[0m[0m                                            = (known after apply)
+      [32m+[0m [0m[1m[0massign_ipv6_address_on_creation[0m[0m                = false
+      [32m+[0m [0m[1m[0mavailability_zone[0m[0m                              = "ap-southeast-1a"
+      [32m+[0m [0m[1m[0mavailability_zone_id[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mcidr_block[0m[0m                                     = "10.0.101.0/24"
+      [32m+[0m [0m[1m[0menable_dns64[0m[0m                                   = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_a_record_on_launch[0m[0m    = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_aaaa_record_on_launch[0m[0m = false
+      [32m+[0m [0m[1m[0mid[0m[0m                                             = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_cidr_block_association_id[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_native[0m[0m                                    = false
+      [32m+[0m [0m[1m[0mmap_public_ip_on_launch[0m[0m                        = true
+      [32m+[0m [0m[1m[0mowner_id[0m[0m                                       = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_dns_hostname_type_on_launch[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                                           = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-public-ap-southeast-1a"
+          [32m+[0m [0m"Type"        = "Public Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                                       = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-public-ap-southeast-1a"
+          [32m+[0m [0m"Type"        = "Public Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                                         = (known after apply)
+    }
+
+[1m  # module.vpc.aws_subnet.public[1][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_subnet" "public" {
+      [32m+[0m [0m[1m[0marn[0m[0m                                            = (known after apply)
+      [32m+[0m [0m[1m[0massign_ipv6_address_on_creation[0m[0m                = false
+      [32m+[0m [0m[1m[0mavailability_zone[0m[0m                              = "ap-southeast-1b"
+      [32m+[0m [0m[1m[0mavailability_zone_id[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mcidr_block[0m[0m                                     = "10.0.102.0/24"
+      [32m+[0m [0m[1m[0menable_dns64[0m[0m                                   = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_a_record_on_launch[0m[0m    = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_aaaa_record_on_launch[0m[0m = false
+      [32m+[0m [0m[1m[0mid[0m[0m                                             = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_cidr_block_association_id[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_native[0m[0m                                    = false
+      [32m+[0m [0m[1m[0mmap_public_ip_on_launch[0m[0m                        = true
+      [32m+[0m [0m[1m[0mowner_id[0m[0m                                       = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_dns_hostname_type_on_launch[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                                           = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-public-ap-southeast-1b"
+          [32m+[0m [0m"Type"        = "Public Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                                       = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-public-ap-southeast-1b"
+          [32m+[0m [0m"Type"        = "Public Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                                         = (known after apply)
+    }
+
+[1m  # module.vpc.aws_vpc.this[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_vpc" "this" {
+      [32m+[0m [0m[1m[0marn[0m[0m                                  = (known after apply)
+      [32m+[0m [0m[1m[0massign_generated_ipv6_cidr_block[0m[0m     = false
+      [32m+[0m [0m[1m[0mcidr_block[0m[0m                           = "10.0.0.0/16"
+      [32m+[0m [0m[1m[0mdefault_network_acl_id[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mdefault_route_table_id[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mdefault_security_group_id[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mdhcp_options_id[0m[0m                      = (known after apply)
+      [32m+[0m [0m[1m[0menable_classiclink[0m[0m                   = (known after apply)
+      [32m+[0m [0m[1m[0menable_classiclink_dns_support[0m[0m       = (known after apply)
+      [32m+[0m [0m[1m[0menable_dns_hostnames[0m[0m                 = true
+      [32m+[0m [0m[1m[0menable_dns_support[0m[0m                   = true
+      [32m+[0m [0m[1m[0mid[0m[0m                                   = (known after apply)
+      [32m+[0m [0m[1m[0minstance_tenancy[0m[0m                     = "default"
+      [32m+[0m [0m[1m[0mipv6_association_id[0m[0m                  = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_cidr_block[0m[0m                      = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_cidr_block_network_border_group[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mmain_route_table_id[0m[0m                  = (known after apply)
+      [32m+[0m [0m[1m[0mowner_id[0m[0m                             = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                                 = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                             = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+    }
+
+[0m[1mPlan:[0m 35 to add, 0 to change, 0 to destroy.
+[0m[0m
+[1mChanges to Outputs:[0m[0m
+  [32m+[0m [0m[1m[0mclb_dns_name[0m[0m = (known after apply)
+  [32m+[0m [0m[1m[0mrds_address[0m[0m  = (known after apply)
+[90m
+─────────────────────────────────────────────────────────────────────────────[0m
+
+Note: You didn't use the -out option to save this plan, so Terraform can't
+guarantee to take exactly these actions if you run "terraform apply" now.
+[Pipeline] }
+[Pipeline] // withAWS
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Execute Terraform Action)
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withAWS
+Constructing AWS CredentialsSetting AWS region ap-southeast-1 
+[Pipeline] {
+[Pipeline] sh
++ cd /home/jenkins/agent/workspace/terraform-demo
+[Pipeline] sh
++ terraform apply -auto-approve
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [32m+[0m create
+ [36m<=[0m read (data resources)
+[0m
+Terraform will perform the following actions:
+
+[1m  # data.aws_secretsmanager_secret.db_creds[0m will be read during apply
+  # (config refers to values not yet known)[0m[0m
+[0m [36m<=[0m[0m data "aws_secretsmanager_secret" "db_creds"  {
+      [32m+[0m [0m[1m[0marn[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mdescription[0m[0m         = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m                  = (known after apply)
+      [32m+[0m [0m[1m[0mkms_key_id[0m[0m          = (known after apply)
+      [32m+[0m [0m[1m[0mname[0m[0m                = (known after apply)
+      [32m+[0m [0m[1m[0mpolicy[0m[0m              = (known after apply)
+      [32m+[0m [0m[1m[0mrotation_enabled[0m[0m    = (known after apply)
+      [32m+[0m [0m[1m[0mrotation_lambda_arn[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mrotation_rules[0m[0m      = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                = (known after apply)
+    }
+
+[1m  # data.aws_secretsmanager_secret_version.db_creds[0m will be read during apply
+  # (config refers to values not yet known)[0m[0m
+[0m [36m<=[0m[0m data "aws_secretsmanager_secret_version" "db_creds"  {
+      [32m+[0m [0m[1m[0marn[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0msecret_binary[0m[0m  = (sensitive value)
+      [32m+[0m [0m[1m[0msecret_id[0m[0m      = (known after apply)
+      [32m+[0m [0m[1m[0msecret_string[0m[0m  = (sensitive value)
+      [32m+[0m [0m[1m[0mversion_id[0m[0m     = (known after apply)
+      [32m+[0m [0m[1m[0mversion_stages[0m[0m = (known after apply)
+    }
+
+[1m  # data.template_file.backend_cloud_init[0m will be read during apply
+  # (config refers to values not yet known)[0m[0m
+[0m [36m<=[0m[0m data "template_file" "backend_cloud_init"  {
+      [32m+[0m [0m[1m[0mid[0m[0m       = (known after apply)
+      [32m+[0m [0m[1m[0mrendered[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mtemplate[0m[0m = <<-EOT
+            #!/bin/bash
+            
+            set -x
+            yum update -y
+            yum install -y git mysql telnet
+            
+            
+            cat << EOF > /tmp/schema.sql
+            
+            -- create database symbiosdb;
+            
+            use symbiosdb;
+            
+            CREATE TABLE IF NOT EXISTS users (
+            id int(11) NOT NULL auto_increment,
+            name varchar(100) NOT NULL,
+            age int(3) NOT NULL,
+            email varchar(100) NOT NULL,
+            PRIMARY KEY (id)
+            );
+            
+            EOF
+            
+            ssh -N -L ${DB_PORT}:127.0.0.1:${DB_PORT} ${DB_USER}@${DB_HOST} &
+            mysql --host=${DB_HOST} --port=${DB_PORT} --user=${DB_USER} --password=${DB_PASSWD} < /tmp/schema.sql
+            
+            
+            mkdir /app
+            git clone https://github.com/dkelim1/nodejs-mysql-crud.git /app
+            
+            
+            curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash -
+            yum install -y nodejs
+            
+            
+            cat << EOF > /app/config.js
+            
+            var config = {
+            	database: {
+            		host:	  '${DB_HOST}', 	// database host
+            		user: 	  '${DB_USER}', 		// your database username
+            		password: '${DB_PASSWD}', 		// your database password
+            		port: 	  '${DB_PORT}', 		// default MySQL port
+            		db: 	  '${DB_NAME}' 		// your database name
+            	},
+            	server: {
+            		host: '*',
+            		port: '3000'
+            	}
+            }
+            
+            module.exports = config
+            
+            EOF
+            
+            cd /app; node app.js &
+        EOT
+      [32m+[0m [0m[1m[0mvars[0m[0m     = {
+          [32m+[0m [0m"DB_HOST"   = (known after apply)
+          [32m+[0m [0m"DB_NAME"   = "symbiosdb"
+          [32m+[0m [0m"DB_PASSWD" = (known after apply)
+          [32m+[0m [0m"DB_PORT"   = (known after apply)
+          [32m+[0m [0m"DB_USER"   = (known after apply)
+        }
+    }
+
+[1m  # aws_autoscaling_group.webapps_asg[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_autoscaling_group" "webapps_asg" {
+      [32m+[0m [0m[1m[0marn[0m[0m                       = (known after apply)
+      [32m+[0m [0m[1m[0mavailability_zones[0m[0m        = (known after apply)
+      [32m+[0m [0m[1m[0mdefault_cooldown[0m[0m          = (known after apply)
+      [32m+[0m [0m[1m[0mdesired_capacity[0m[0m          = (known after apply)
+      [32m+[0m [0m[1m[0mforce_delete[0m[0m              = false
+      [32m+[0m [0m[1m[0mforce_delete_warm_pool[0m[0m    = false
+      [32m+[0m [0m[1m[0mhealth_check_grace_period[0m[0m = 300
+      [32m+[0m [0m[1m[0mhealth_check_type[0m[0m         = "EC2"
+      [32m+[0m [0m[1m[0mid[0m[0m                        = (known after apply)
+      [32m+[0m [0m[1m[0mlaunch_configuration[0m[0m      = (known after apply)
+      [32m+[0m [0m[1m[0mload_balancers[0m[0m            = [
+          [32m+[0m [0m"webapps-dev-elb",
+        ]
+      [32m+[0m [0m[1m[0mmax_size[0m[0m                  = 4
+      [32m+[0m [0m[1m[0mmetrics_granularity[0m[0m       = "1Minute"
+      [32m+[0m [0m[1m[0mmin_size[0m[0m                  = 2
+      [32m+[0m [0m[1m[0mname[0m[0m                      = (known after apply)
+      [32m+[0m [0m[1m[0mname_prefix[0m[0m               = "symbios-webapps-dev-asg"
+      [32m+[0m [0m[1m[0mprotect_from_scale_in[0m[0m     = false
+      [32m+[0m [0m[1m[0mservice_linked_role_arn[0m[0m   = (known after apply)
+      [32m+[0m [0m[1m[0mvpc_zone_identifier[0m[0m       = (known after apply)
+      [32m+[0m [0m[1m[0mwait_for_capacity_timeout[0m[0m = "10m"
+
+      [32m+[0m [0mtag {
+          [32m+[0m [0m[1m[0mkey[0m[0m                 = "Name"
+          [32m+[0m [0m[1m[0mpropagate_at_launch[0m[0m = true
+          [32m+[0m [0m[1m[0mvalue[0m[0m               = "symbios-webapps-asg"
+        }
+    }
+
+[1m  # aws_autoscaling_policy.cpu[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_autoscaling_policy" "cpu" {
+      [32m+[0m [0m[1m[0marn[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0mautoscaling_group_name[0m[0m  = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m                      = (known after apply)
+      [32m+[0m [0m[1m[0mmetric_aggregation_type[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mname[0m[0m                    = "cpu"
+      [32m+[0m [0m[1m[0mpolicy_type[0m[0m             = "TargetTrackingScaling"
+
+      [32m+[0m [0mtarget_tracking_configuration {
+          [32m+[0m [0m[1m[0mdisable_scale_in[0m[0m = false
+          [32m+[0m [0m[1m[0mtarget_value[0m[0m     = 70
+
+          [32m+[0m [0mpredefined_metric_specification {
+              [32m+[0m [0m[1m[0mpredefined_metric_type[0m[0m = "ASGAverageCPUUtilization"
+            }
+        }
+    }
+
+[1m  # aws_db_instance.mysql_rds[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_db_instance" "mysql_rds" {
+      [32m+[0m [0m[1m[0maddress[0m[0m                               = (known after apply)
+      [32m+[0m [0m[1m[0mallocated_storage[0m[0m                     = 10
+      [32m+[0m [0m[1m[0mapply_immediately[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0marn[0m[0m                                   = (known after apply)
+      [32m+[0m [0m[1m[0mauto_minor_version_upgrade[0m[0m            = true
+      [32m+[0m [0m[1m[0mavailability_zone[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0mbackup_retention_period[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mbackup_window[0m[0m                         = (known after apply)
+      [32m+[0m [0m[1m[0mca_cert_identifier[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mcharacter_set_name[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mcopy_tags_to_snapshot[0m[0m                 = false
+      [32m+[0m [0m[1m[0mdb_subnet_group_name[0m[0m                  = "symbiosis_vpc_dev"
+      [32m+[0m [0m[1m[0mdelete_automated_backups[0m[0m              = true
+      [32m+[0m [0m[1m[0mendpoint[0m[0m                              = (known after apply)
+      [32m+[0m [0m[1m[0mengine[0m[0m                                = "mysql"
+      [32m+[0m [0m[1m[0mengine_version[0m[0m                        = (known after apply)
+      [32m+[0m [0m[1m[0mengine_version_actual[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mhosted_zone_id[0m[0m                        = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m                                    = (known after apply)
+      [32m+[0m [0m[1m[0midentifier[0m[0m                            = (known after apply)
+      [32m+[0m [0m[1m[0midentifier_prefix[0m[0m                     = "mysql-rds-dev"
+      [32m+[0m [0m[1m[0minstance_class[0m[0m                        = "db.t2.micro"
+      [32m+[0m [0m[1m[0mkms_key_id[0m[0m                            = (known after apply)
+      [32m+[0m [0m[1m[0mlatest_restorable_time[0m[0m                = (known after apply)
+      [32m+[0m [0m[1m[0mlicense_model[0m[0m                         = (known after apply)
+      [32m+[0m [0m[1m[0mmaintenance_window[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mmonitoring_interval[0m[0m                   = 0
+      [32m+[0m [0m[1m[0mmonitoring_role_arn[0m[0m                   = (known after apply)
+      [32m+[0m [0m[1m[0mmulti_az[0m[0m                              = true
+      [32m+[0m [0m[1m[0mname[0m[0m                                  = "symbiosdb"
+      [32m+[0m [0m[1m[0mnchar_character_set_name[0m[0m              = (known after apply)
+      [32m+[0m [0m[1m[0moption_group_name[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0mparameter_group_name[0m[0m                  = (known after apply)
+      [32m+[0m [0m[1m[0mpassword[0m[0m                              = (sensitive value)
+      [32m+[0m [0m[1m[0mperformance_insights_enabled[0m[0m          = false
+      [32m+[0m [0m[1m[0mperformance_insights_kms_key_id[0m[0m       = (known after apply)
+      [32m+[0m [0m[1m[0mperformance_insights_retention_period[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mport[0m[0m                                  = (known after apply)
+      [32m+[0m [0m[1m[0mpublicly_accessible[0m[0m                   = false
+      [32m+[0m [0m[1m[0mreplicas[0m[0m                              = (known after apply)
+      [32m+[0m [0m[1m[0mresource_id[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mskip_final_snapshot[0m[0m                   = true
+      [32m+[0m [0m[1m[0msnapshot_identifier[0m[0m                   = (known after apply)
+      [32m+[0m [0m[1m[0mstatus[0m[0m                                = (known after apply)
+      [32m+[0m [0m[1m[0mstorage_type[0m[0m                          = (known after apply)
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                              = (known after apply)
+      [32m+[0m [0m[1m[0mtimezone[0m[0m                              = (known after apply)
+      [32m+[0m [0m[1m[0musername[0m[0m                              = (known after apply)
+      [32m+[0m [0m[1m[0mvpc_security_group_ids[0m[0m                = (known after apply)
+    }
+
+[1m  # aws_elb.webapps_elb[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_elb" "webapps_elb" {
+      [32m+[0m [0m[1m[0marn[0m[0m                         = (known after apply)
+      [32m+[0m [0m[1m[0mavailability_zones[0m[0m          = (known after apply)
+      [32m+[0m [0m[1m[0mconnection_draining[0m[0m         = false
+      [32m+[0m [0m[1m[0mconnection_draining_timeout[0m[0m = 300
+      [32m+[0m [0m[1m[0mcross_zone_load_balancing[0m[0m   = true
+      [32m+[0m [0m[1m[0mdesync_mitigation_mode[0m[0m      = "defensive"
+      [32m+[0m [0m[1m[0mdns_name[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m                          = (known after apply)
+      [32m+[0m [0m[1m[0midle_timeout[0m[0m                = 60
+      [32m+[0m [0m[1m[0minstances[0m[0m                   = (known after apply)
+      [32m+[0m [0m[1m[0minternal[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mname[0m[0m                        = "webapps-dev-elb"
+      [32m+[0m [0m[1m[0msecurity_groups[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0msource_security_group[0m[0m       = (known after apply)
+      [32m+[0m [0m[1m[0msource_security_group_id[0m[0m    = (known after apply)
+      [32m+[0m [0m[1m[0msubnets[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mzone_id[0m[0m                     = (known after apply)
+
+      [32m+[0m [0mhealth_check {
+          [32m+[0m [0m[1m[0mhealthy_threshold[0m[0m   = 2
+          [32m+[0m [0m[1m[0minterval[0m[0m            = 30
+          [32m+[0m [0m[1m[0mtarget[0m[0m              = "HTTP:3000/"
+          [32m+[0m [0m[1m[0mtimeout[0m[0m             = 25
+          [32m+[0m [0m[1m[0munhealthy_threshold[0m[0m = 10
+        }
+
+      [32m+[0m [0mlistener {
+          [32m+[0m [0m[1m[0minstance_port[0m[0m     = 3000
+          [32m+[0m [0m[1m[0minstance_protocol[0m[0m = "http"
+          [32m+[0m [0m[1m[0mlb_port[0m[0m           = 80
+          [32m+[0m [0m[1m[0mlb_protocol[0m[0m       = "http"
+        }
+    }
+
+[1m  # aws_instance.bastion_host[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_instance" "bastion_host" {
+      [32m+[0m [0m[1m[0mami[0m[0m                                  = "ami-0cc8dc7a69cd8b547"
+      [32m+[0m [0m[1m[0marn[0m[0m                                  = (known after apply)
+      [32m+[0m [0m[1m[0massociate_public_ip_address[0m[0m          = (known after apply)
+      [32m+[0m [0m[1m[0mavailability_zone[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mcpu_core_count[0m[0m                       = (known after apply)
+      [32m+[0m [0m[1m[0mcpu_threads_per_core[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mdisable_api_termination[0m[0m              = (known after apply)
+      [32m+[0m [0m[1m[0mebs_optimized[0m[0m                        = (known after apply)
+      [32m+[0m [0m[1m[0mget_password_data[0m[0m                    = false
+      [32m+[0m [0m[1m[0mhost_id[0m[0m                              = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m                                   = (known after apply)
+      [32m+[0m [0m[1m[0minstance_initiated_shutdown_behavior[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0minstance_state[0m[0m                       = (known after apply)
+      [32m+[0m [0m[1m[0minstance_type[0m[0m                        = "t2.micro"
+      [32m+[0m [0m[1m[0mipv6_address_count[0m[0m                   = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_addresses[0m[0m                       = (known after apply)
+      [32m+[0m [0m[1m[0mkey_name[0m[0m                             = "terraform-key"
+      [32m+[0m [0m[1m[0mmonitoring[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0moutpost_arn[0m[0m                          = (known after apply)
+      [32m+[0m [0m[1m[0mpassword_data[0m[0m                        = (known after apply)
+      [32m+[0m [0m[1m[0mplacement_group[0m[0m                      = (known after apply)
+      [32m+[0m [0m[1m[0mplacement_partition_number[0m[0m           = (known after apply)
+      [32m+[0m [0m[1m[0mprimary_network_interface_id[0m[0m         = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_dns[0m[0m                          = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_ip[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mpublic_dns[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mpublic_ip[0m[0m                            = (known after apply)
+      [32m+[0m [0m[1m[0msecondary_private_ips[0m[0m                = (known after apply)
+      [32m+[0m [0m[1m[0msecurity_groups[0m[0m                      = (known after apply)
+      [32m+[0m [0m[1m[0msource_dest_check[0m[0m                    = true
+      [32m+[0m [0m[1m[0msubnet_id[0m[0m                            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                                 = {
+          [32m+[0m [0m"Name" = "symbios-dev-bastion-host"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                             = {
+          [32m+[0m [0m"Name" = "symbios-dev-bastion-host"
+        }
+      [32m+[0m [0m[1m[0mtenancy[0m[0m                              = (known after apply)
+      [32m+[0m [0m[1m[0muser_data[0m[0m                            = "fd7b05789d58781f5afb647cfb351b0e62d081b5"
+      [32m+[0m [0m[1m[0muser_data_base64[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0mvpc_security_group_ids[0m[0m               = (known after apply)
+
+      [32m+[0m [0mcapacity_reservation_specification {
+          [32m+[0m [0m[1m[0mcapacity_reservation_preference[0m[0m = (known after apply)
+
+          [32m+[0m [0mcapacity_reservation_target {
+              [32m+[0m [0m[1m[0mcapacity_reservation_id[0m[0m = (known after apply)
+            }
+        }
+
+      [32m+[0m [0mebs_block_device {
+          [32m+[0m [0m[1m[0mdelete_on_termination[0m[0m = (known after apply)
+          [32m+[0m [0m[1m[0mdevice_name[0m[0m           = (known after apply)
+          [32m+[0m [0m[1m[0mencrypted[0m[0m             = (known after apply)
+          [32m+[0m [0m[1m[0miops[0m[0m                  = (known after apply)
+          [32m+[0m [0m[1m[0mkms_key_id[0m[0m            = (known after apply)
+          [32m+[0m [0m[1m[0msnapshot_id[0m[0m           = (known after apply)
+          [32m+[0m [0m[1m[0mtags[0m[0m                  = (known after apply)
+          [32m+[0m [0m[1m[0mthroughput[0m[0m            = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_id[0m[0m             = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_size[0m[0m           = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_type[0m[0m           = (known after apply)
+        }
+
+      [32m+[0m [0menclave_options {
+          [32m+[0m [0m[1m[0menabled[0m[0m = (known after apply)
+        }
+
+      [32m+[0m [0mephemeral_block_device {
+          [32m+[0m [0m[1m[0mdevice_name[0m[0m  = (known after apply)
+          [32m+[0m [0m[1m[0mno_device[0m[0m    = (known after apply)
+          [32m+[0m [0m[1m[0mvirtual_name[0m[0m = (known after apply)
+        }
+
+      [32m+[0m [0mmetadata_options {
+          [32m+[0m [0m[1m[0mhttp_endpoint[0m[0m               = (known after apply)
+          [32m+[0m [0m[1m[0mhttp_put_response_hop_limit[0m[0m = (known after apply)
+          [32m+[0m [0m[1m[0mhttp_tokens[0m[0m                 = (known after apply)
+          [32m+[0m [0m[1m[0minstance_metadata_tags[0m[0m      = (known after apply)
+        }
+
+      [32m+[0m [0mnetwork_interface {
+          [32m+[0m [0m[1m[0mdelete_on_termination[0m[0m = (known after apply)
+          [32m+[0m [0m[1m[0mdevice_index[0m[0m          = (known after apply)
+          [32m+[0m [0m[1m[0mnetwork_interface_id[0m[0m  = (known after apply)
+        }
+
+      [32m+[0m [0mroot_block_device {
+          [32m+[0m [0m[1m[0mdelete_on_termination[0m[0m = (known after apply)
+          [32m+[0m [0m[1m[0mdevice_name[0m[0m           = (known after apply)
+          [32m+[0m [0m[1m[0mencrypted[0m[0m             = (known after apply)
+          [32m+[0m [0m[1m[0miops[0m[0m                  = (known after apply)
+          [32m+[0m [0m[1m[0mkms_key_id[0m[0m            = (known after apply)
+          [32m+[0m [0m[1m[0mtags[0m[0m                  = (known after apply)
+          [32m+[0m [0m[1m[0mthroughput[0m[0m            = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_id[0m[0m             = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_size[0m[0m           = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_type[0m[0m           = (known after apply)
+        }
+    }
+
+[1m  # aws_launch_configuration.webapps_lc[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_launch_configuration" "webapps_lc" {
+      [32m+[0m [0m[1m[0marn[0m[0m                         = (known after apply)
+      [32m+[0m [0m[1m[0massociate_public_ip_address[0m[0m = false
+      [32m+[0m [0m[1m[0mebs_optimized[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0menable_monitoring[0m[0m           = true
+      [32m+[0m [0m[1m[0mid[0m[0m                          = (known after apply)
+      [32m+[0m [0m[1m[0mimage_id[0m[0m                    = "ami-0cc8dc7a69cd8b547"
+      [32m+[0m [0m[1m[0minstance_type[0m[0m               = "t2.micro"
+      [32m+[0m [0m[1m[0mkey_name[0m[0m                    = "terraform-key"
+      [32m+[0m [0m[1m[0mname[0m[0m                        = (known after apply)
+      [32m+[0m [0m[1m[0mname_prefix[0m[0m                 = "symbios-webapps-dev-lc"
+      [32m+[0m [0m[1m[0msecurity_groups[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0muser_data[0m[0m                   = (known after apply)
+
+      [32m+[0m [0mebs_block_device {
+          [32m+[0m [0m[1m[0mdelete_on_termination[0m[0m = (known after apply)
+          [32m+[0m [0m[1m[0mdevice_name[0m[0m           = (known after apply)
+          [32m+[0m [0m[1m[0mencrypted[0m[0m             = (known after apply)
+          [32m+[0m [0m[1m[0miops[0m[0m                  = (known after apply)
+          [32m+[0m [0m[1m[0mno_device[0m[0m             = (known after apply)
+          [32m+[0m [0m[1m[0msnapshot_id[0m[0m           = (known after apply)
+          [32m+[0m [0m[1m[0mthroughput[0m[0m            = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_size[0m[0m           = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_type[0m[0m           = (known after apply)
+        }
+
+      [32m+[0m [0mmetadata_options {
+          [32m+[0m [0m[1m[0mhttp_endpoint[0m[0m               = (known after apply)
+          [32m+[0m [0m[1m[0mhttp_put_response_hop_limit[0m[0m = (known after apply)
+          [32m+[0m [0m[1m[0mhttp_tokens[0m[0m                 = (known after apply)
+        }
+
+      [32m+[0m [0mroot_block_device {
+          [32m+[0m [0m[1m[0mdelete_on_termination[0m[0m = (known after apply)
+          [32m+[0m [0m[1m[0mencrypted[0m[0m             = (known after apply)
+          [32m+[0m [0m[1m[0miops[0m[0m                  = (known after apply)
+          [32m+[0m [0m[1m[0mthroughput[0m[0m            = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_size[0m[0m           = (known after apply)
+          [32m+[0m [0m[1m[0mvolume_type[0m[0m           = (known after apply)
+        }
+    }
+
+[1m  # aws_secretsmanager_secret.db_creds[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_secretsmanager_secret" "db_creds" {
+      [32m+[0m [0m[1m[0marn[0m[0m                            = (known after apply)
+      [32m+[0m [0m[1m[0mforce_overwrite_replica_secret[0m[0m = false
+      [32m+[0m [0m[1m[0mid[0m[0m                             = (known after apply)
+      [32m+[0m [0m[1m[0mname[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mname_prefix[0m[0m                    = "dev-db-creds"
+      [32m+[0m [0m[1m[0mpolicy[0m[0m                         = (known after apply)
+      [32m+[0m [0m[1m[0mrecovery_window_in_days[0m[0m        = 0
+      [32m+[0m [0m[1m[0mrotation_enabled[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mrotation_lambda_arn[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                       = (known after apply)
+
+      [32m+[0m [0mreplica {
+          [32m+[0m [0m[1m[0mkms_key_id[0m[0m         = (known after apply)
+          [32m+[0m [0m[1m[0mlast_accessed_date[0m[0m = (known after apply)
+          [32m+[0m [0m[1m[0mregion[0m[0m             = (known after apply)
+          [32m+[0m [0m[1m[0mstatus[0m[0m             = (known after apply)
+          [32m+[0m [0m[1m[0mstatus_message[0m[0m     = (known after apply)
+        }
+
+      [32m+[0m [0mrotation_rules {
+          [32m+[0m [0m[1m[0mautomatically_after_days[0m[0m = (known after apply)
+        }
+    }
+
+[1m  # aws_secretsmanager_secret_version.db_creds[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_secretsmanager_secret_version" "db_creds" {
+      [32m+[0m [0m[1m[0marn[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0msecret_id[0m[0m      = (known after apply)
+      [32m+[0m [0m[1m[0msecret_string[0m[0m  = (sensitive value)
+      [32m+[0m [0m[1m[0mversion_id[0m[0m     = (known after apply)
+      [32m+[0m [0m[1m[0mversion_stages[0m[0m = (known after apply)
+    }
+
+[1m  # aws_security_group.apps_instance_sg[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_security_group" "apps_instance_sg" {
+      [32m+[0m [0m[1m[0marn[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mdescription[0m[0m            = "Managed by Terraform"
+      [32m+[0m [0m[1m[0megress[0m[0m                 = [
+          [32m+[0m [0m{
+              [32m+[0m [0mcidr_blocks      = [
+                  [32m+[0m [0m"0.0.0.0/0",
+                ]
+              [32m+[0m [0mdescription      = ""
+              [32m+[0m [0mfrom_port        = 0
+              [32m+[0m [0mipv6_cidr_blocks = [
+                  [32m+[0m [0m"::/0",
+                ]
+              [32m+[0m [0mprefix_list_ids  = []
+              [32m+[0m [0mprotocol         = "-1"
+              [32m+[0m [0msecurity_groups  = []
+              [32m+[0m [0mself             = false
+              [32m+[0m [0mto_port          = 0
+            },
+        ]
+      [32m+[0m [0m[1m[0mid[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0mingress[0m[0m                = [
+          [32m+[0m [0m{
+              [32m+[0m [0mcidr_blocks      = []
+              [32m+[0m [0mdescription      = ""
+              [32m+[0m [0mfrom_port        = 22
+              [32m+[0m [0mipv6_cidr_blocks = []
+              [32m+[0m [0mprefix_list_ids  = []
+              [32m+[0m [0mprotocol         = "tcp"
+              [32m+[0m [0msecurity_groups  = (known after apply)
+              [32m+[0m [0mself             = false
+              [32m+[0m [0mto_port          = 22
+            },
+          [32m+[0m [0m{
+              [32m+[0m [0mcidr_blocks      = []
+              [32m+[0m [0mdescription      = ""
+              [32m+[0m [0mfrom_port        = 3000
+              [32m+[0m [0mipv6_cidr_blocks = []
+              [32m+[0m [0mprefix_list_ids  = []
+              [32m+[0m [0mprotocol         = "tcp"
+              [32m+[0m [0msecurity_groups  = (known after apply)
+              [32m+[0m [0mself             = false
+              [32m+[0m [0mto_port          = 3000
+            },
+        ]
+      [32m+[0m [0m[1m[0mname[0m[0m                   = "apps-instance-dev-sg"
+      [32m+[0m [0m[1m[0mname_prefix[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mowner_id[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mrevoke_rules_on_delete[0m[0m = false
+      [32m+[0m [0m[1m[0mtags_all[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                 = (known after apply)
+    }
+
+[1m  # aws_security_group.bastion_host_sg[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_security_group" "bastion_host_sg" {
+      [32m+[0m [0m[1m[0marn[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mdescription[0m[0m            = "Managed by Terraform"
+      [32m+[0m [0m[1m[0megress[0m[0m                 = [
+          [32m+[0m [0m{
+              [32m+[0m [0mcidr_blocks      = [
+                  [32m+[0m [0m"0.0.0.0/0",
+                ]
+              [32m+[0m [0mdescription      = ""
+              [32m+[0m [0mfrom_port        = 0
+              [32m+[0m [0mipv6_cidr_blocks = [
+                  [32m+[0m [0m"::/0",
+                ]
+              [32m+[0m [0mprefix_list_ids  = []
+              [32m+[0m [0mprotocol         = "-1"
+              [32m+[0m [0msecurity_groups  = []
+              [32m+[0m [0mself             = false
+              [32m+[0m [0mto_port          = 0
+            },
+        ]
+      [32m+[0m [0m[1m[0mid[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0mingress[0m[0m                = [
+          [32m+[0m [0m{
+              [32m+[0m [0mcidr_blocks      = [
+                  [32m+[0m [0m"0.0.0.0/0",
+                ]
+              [32m+[0m [0mdescription      = ""
+              [32m+[0m [0mfrom_port        = 22
+              [32m+[0m [0mipv6_cidr_blocks = []
+              [32m+[0m [0mprefix_list_ids  = []
+              [32m+[0m [0mprotocol         = "tcp"
+              [32m+[0m [0msecurity_groups  = []
+              [32m+[0m [0mself             = false
+              [32m+[0m [0mto_port          = 22
+            },
+        ]
+      [32m+[0m [0m[1m[0mname[0m[0m                   = "bastion-host-dev-sg"
+      [32m+[0m [0m[1m[0mname_prefix[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mowner_id[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mrevoke_rules_on_delete[0m[0m = false
+      [32m+[0m [0m[1m[0mtags_all[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                 = (known after apply)
+    }
+
+[1m  # aws_security_group.elb_sg[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_security_group" "elb_sg" {
+      [32m+[0m [0m[1m[0marn[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mdescription[0m[0m            = "Managed by Terraform"
+      [32m+[0m [0m[1m[0megress[0m[0m                 = [
+          [32m+[0m [0m{
+              [32m+[0m [0mcidr_blocks      = [
+                  [32m+[0m [0m"0.0.0.0/0",
+                ]
+              [32m+[0m [0mdescription      = ""
+              [32m+[0m [0mfrom_port        = 0
+              [32m+[0m [0mipv6_cidr_blocks = []
+              [32m+[0m [0mprefix_list_ids  = []
+              [32m+[0m [0mprotocol         = "-1"
+              [32m+[0m [0msecurity_groups  = []
+              [32m+[0m [0mself             = false
+              [32m+[0m [0mto_port          = 0
+            },
+        ]
+      [32m+[0m [0m[1m[0mid[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0mingress[0m[0m                = [
+          [32m+[0m [0m{
+              [32m+[0m [0mcidr_blocks      = [
+                  [32m+[0m [0m"0.0.0.0/0",
+                ]
+              [32m+[0m [0mdescription      = ""
+              [32m+[0m [0mfrom_port        = 80
+              [32m+[0m [0mipv6_cidr_blocks = []
+              [32m+[0m [0mprefix_list_ids  = []
+              [32m+[0m [0mprotocol         = "tcp"
+              [32m+[0m [0msecurity_groups  = []
+              [32m+[0m [0mself             = false
+              [32m+[0m [0mto_port          = 80
+            },
+        ]
+      [32m+[0m [0m[1m[0mname[0m[0m                   = "elb-dev-sg"
+      [32m+[0m [0m[1m[0mname_prefix[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mowner_id[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mrevoke_rules_on_delete[0m[0m = false
+      [32m+[0m [0m[1m[0mtags_all[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                 = (known after apply)
+    }
+
+[1m  # aws_security_group.mysqldb_sg[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_security_group" "mysqldb_sg" {
+      [32m+[0m [0m[1m[0marn[0m[0m                    = (known after apply)
+      [32m+[0m [0m[1m[0mdescription[0m[0m            = "Managed by Terraform"
+      [32m+[0m [0m[1m[0megress[0m[0m                 = [
+          [32m+[0m [0m{
+              [32m+[0m [0mcidr_blocks      = [
+                  [32m+[0m [0m"0.0.0.0/0",
+                ]
+              [32m+[0m [0mdescription      = ""
+              [32m+[0m [0mfrom_port        = 0
+              [32m+[0m [0mipv6_cidr_blocks = []
+              [32m+[0m [0mprefix_list_ids  = []
+              [32m+[0m [0mprotocol         = "-1"
+              [32m+[0m [0msecurity_groups  = []
+              [32m+[0m [0mself             = false
+              [32m+[0m [0mto_port          = 0
+            },
+        ]
+      [32m+[0m [0m[1m[0mid[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0mingress[0m[0m                = [
+          [32m+[0m [0m{
+              [32m+[0m [0mcidr_blocks      = []
+              [32m+[0m [0mdescription      = ""
+              [32m+[0m [0mfrom_port        = 3306
+              [32m+[0m [0mipv6_cidr_blocks = []
+              [32m+[0m [0mprefix_list_ids  = []
+              [32m+[0m [0mprotocol         = "tcp"
+              [32m+[0m [0msecurity_groups  = (known after apply)
+              [32m+[0m [0mself             = false
+              [32m+[0m [0mto_port          = 3306
+            },
+        ]
+      [32m+[0m [0m[1m[0mname[0m[0m                   = "mysqldb-dev-sg"
+      [32m+[0m [0m[1m[0mname_prefix[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mowner_id[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mrevoke_rules_on_delete[0m[0m = false
+      [32m+[0m [0m[1m[0mtags_all[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                 = (known after apply)
+    }
+
+[1m  # random_password.password[0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "random_password" "password" {
+      [32m+[0m [0m[1m[0mid[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mlength[0m[0m           = 16
+      [32m+[0m [0m[1m[0mlower[0m[0m            = true
+      [32m+[0m [0m[1m[0mmin_lower[0m[0m        = 0
+      [32m+[0m [0m[1m[0mmin_numeric[0m[0m      = 0
+      [32m+[0m [0m[1m[0mmin_special[0m[0m      = 0
+      [32m+[0m [0m[1m[0mmin_upper[0m[0m        = 0
+      [32m+[0m [0m[1m[0mnumber[0m[0m           = true
+      [32m+[0m [0m[1m[0moverride_special[0m[0m = "#*^_-"
+      [32m+[0m [0m[1m[0mresult[0m[0m           = (sensitive value)
+      [32m+[0m [0m[1m[0mspecial[0m[0m          = true
+      [32m+[0m [0m[1m[0mupper[0m[0m            = true
+    }
+
+[1m  # module.vpc.aws_db_subnet_group.database[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_db_subnet_group" "database" {
+      [32m+[0m [0m[1m[0marn[0m[0m         = (known after apply)
+      [32m+[0m [0m[1m[0mdescription[0m[0m = "Database subnet group for symbiosis_vpc_dev"
+      [32m+[0m [0m[1m[0mid[0m[0m          = (known after apply)
+      [32m+[0m [0m[1m[0mname[0m[0m        = "symbiosis_vpc_dev"
+      [32m+[0m [0m[1m[0mname_prefix[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0msubnet_ids[0m[0m  = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m        = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m    = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+    }
+
+[1m  # module.vpc.aws_eip.nat[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_eip" "nat" {
+      [32m+[0m [0m[1m[0mallocation_id[0m[0m        = (known after apply)
+      [32m+[0m [0m[1m[0massociation_id[0m[0m       = (known after apply)
+      [32m+[0m [0m[1m[0mcarrier_ip[0m[0m           = (known after apply)
+      [32m+[0m [0m[1m[0mcustomer_owned_ip[0m[0m    = (known after apply)
+      [32m+[0m [0m[1m[0mdomain[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m                   = (known after apply)
+      [32m+[0m [0m[1m[0minstance[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0mnetwork_border_group[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mnetwork_interface[0m[0m    = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_dns[0m[0m          = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_ip[0m[0m           = (known after apply)
+      [32m+[0m [0m[1m[0mpublic_dns[0m[0m           = (known after apply)
+      [32m+[0m [0m[1m[0mpublic_ip[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mpublic_ipv4_pool[0m[0m     = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                 = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-ap-southeast-1a"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m             = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-ap-southeast-1a"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc[0m[0m                  = true
+    }
+
+[1m  # module.vpc.aws_internet_gateway.this[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_internet_gateway" "this" {
+      [32m+[0m [0m[1m[0marn[0m[0m      = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m       = (known after apply)
+      [32m+[0m [0m[1m[0mowner_id[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m     = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m   = (known after apply)
+    }
+
+[1m  # module.vpc.aws_nat_gateway.this[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_nat_gateway" "this" {
+      [32m+[0m [0m[1m[0mallocation_id[0m[0m        = (known after apply)
+      [32m+[0m [0m[1m[0mconnectivity_type[0m[0m    = "public"
+      [32m+[0m [0m[1m[0mid[0m[0m                   = (known after apply)
+      [32m+[0m [0m[1m[0mnetwork_interface_id[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_ip[0m[0m           = (known after apply)
+      [32m+[0m [0m[1m[0mpublic_ip[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0msubnet_id[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                 = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-ap-southeast-1a"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m             = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-ap-southeast-1a"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+    }
+
+[1m  # module.vpc.aws_route.private_nat_gateway[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route" "private_nat_gateway" {
+      [32m+[0m [0m[1m[0mdestination_cidr_block[0m[0m = "0.0.0.0/0"
+      [32m+[0m [0m[1m[0mid[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0minstance_id[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0minstance_owner_id[0m[0m      = (known after apply)
+      [32m+[0m [0m[1m[0mnat_gateway_id[0m[0m         = (known after apply)
+      [32m+[0m [0m[1m[0mnetwork_interface_id[0m[0m   = (known after apply)
+      [32m+[0m [0m[1m[0morigin[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mroute_table_id[0m[0m         = (known after apply)
+      [32m+[0m [0m[1m[0mstate[0m[0m                  = (known after apply)
+
+      [32m+[0m [0mtimeouts {
+          [32m+[0m [0m[1m[0mcreate[0m[0m = "5m"
+        }
+    }
+
+[1m  # module.vpc.aws_route.public_internet_gateway[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route" "public_internet_gateway" {
+      [32m+[0m [0m[1m[0mdestination_cidr_block[0m[0m = "0.0.0.0/0"
+      [32m+[0m [0m[1m[0mgateway_id[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m                     = (known after apply)
+      [32m+[0m [0m[1m[0minstance_id[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0minstance_owner_id[0m[0m      = (known after apply)
+      [32m+[0m [0m[1m[0mnetwork_interface_id[0m[0m   = (known after apply)
+      [32m+[0m [0m[1m[0morigin[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mroute_table_id[0m[0m         = (known after apply)
+      [32m+[0m [0m[1m[0mstate[0m[0m                  = (known after apply)
+
+      [32m+[0m [0mtimeouts {
+          [32m+[0m [0m[1m[0mcreate[0m[0m = "5m"
+        }
+    }
+
+[1m  # module.vpc.aws_route_table.database[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route_table" "database" {
+      [32m+[0m [0m[1m[0marn[0m[0m              = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mowner_id[0m[0m         = (known after apply)
+      [32m+[0m [0m[1m[0mpropagating_vgws[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mroute[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m             = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-db"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m         = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-db"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m           = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table.private[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route_table" "private" {
+      [32m+[0m [0m[1m[0marn[0m[0m              = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mowner_id[0m[0m         = (known after apply)
+      [32m+[0m [0m[1m[0mpropagating_vgws[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mroute[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m             = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-private"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m         = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-private"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m           = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table.public[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route_table" "public" {
+      [32m+[0m [0m[1m[0marn[0m[0m              = (known after apply)
+      [32m+[0m [0m[1m[0mid[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mowner_id[0m[0m         = (known after apply)
+      [32m+[0m [0m[1m[0mpropagating_vgws[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mroute[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m             = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-public"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m         = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-public"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m           = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table_association.database[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route_table_association" "database" {
+      [32m+[0m [0m[1m[0mid[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0mroute_table_id[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0msubnet_id[0m[0m      = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table_association.database[1][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route_table_association" "database" {
+      [32m+[0m [0m[1m[0mid[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0mroute_table_id[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0msubnet_id[0m[0m      = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table_association.private[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route_table_association" "private" {
+      [32m+[0m [0m[1m[0mid[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0mroute_table_id[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0msubnet_id[0m[0m      = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table_association.private[1][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route_table_association" "private" {
+      [32m+[0m [0m[1m[0mid[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0mroute_table_id[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0msubnet_id[0m[0m      = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table_association.public[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route_table_association" "public" {
+      [32m+[0m [0m[1m[0mid[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0mroute_table_id[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0msubnet_id[0m[0m      = (known after apply)
+    }
+
+[1m  # module.vpc.aws_route_table_association.public[1][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_route_table_association" "public" {
+      [32m+[0m [0m[1m[0mid[0m[0m             = (known after apply)
+      [32m+[0m [0m[1m[0mroute_table_id[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0msubnet_id[0m[0m      = (known after apply)
+    }
+
+[1m  # module.vpc.aws_subnet.database[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_subnet" "database" {
+      [32m+[0m [0m[1m[0marn[0m[0m                                            = (known after apply)
+      [32m+[0m [0m[1m[0massign_ipv6_address_on_creation[0m[0m                = false
+      [32m+[0m [0m[1m[0mavailability_zone[0m[0m                              = "ap-southeast-1a"
+      [32m+[0m [0m[1m[0mavailability_zone_id[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mcidr_block[0m[0m                                     = "10.0.121.0/24"
+      [32m+[0m [0m[1m[0menable_dns64[0m[0m                                   = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_a_record_on_launch[0m[0m    = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_aaaa_record_on_launch[0m[0m = false
+      [32m+[0m [0m[1m[0mid[0m[0m                                             = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_cidr_block_association_id[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_native[0m[0m                                    = false
+      [32m+[0m [0m[1m[0mmap_public_ip_on_launch[0m[0m                        = false
+      [32m+[0m [0m[1m[0mowner_id[0m[0m                                       = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_dns_hostname_type_on_launch[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                                           = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-db-ap-southeast-1a"
+          [32m+[0m [0m"Type"        = "Private Database Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                                       = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-db-ap-southeast-1a"
+          [32m+[0m [0m"Type"        = "Private Database Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                                         = (known after apply)
+    }
+
+[1m  # module.vpc.aws_subnet.database[1][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_subnet" "database" {
+      [32m+[0m [0m[1m[0marn[0m[0m                                            = (known after apply)
+      [32m+[0m [0m[1m[0massign_ipv6_address_on_creation[0m[0m                = false
+      [32m+[0m [0m[1m[0mavailability_zone[0m[0m                              = "ap-southeast-1b"
+      [32m+[0m [0m[1m[0mavailability_zone_id[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mcidr_block[0m[0m                                     = "10.0.122.0/24"
+      [32m+[0m [0m[1m[0menable_dns64[0m[0m                                   = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_a_record_on_launch[0m[0m    = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_aaaa_record_on_launch[0m[0m = false
+      [32m+[0m [0m[1m[0mid[0m[0m                                             = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_cidr_block_association_id[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_native[0m[0m                                    = false
+      [32m+[0m [0m[1m[0mmap_public_ip_on_launch[0m[0m                        = false
+      [32m+[0m [0m[1m[0mowner_id[0m[0m                                       = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_dns_hostname_type_on_launch[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                                           = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-db-ap-southeast-1b"
+          [32m+[0m [0m"Type"        = "Private Database Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                                       = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-db-ap-southeast-1b"
+          [32m+[0m [0m"Type"        = "Private Database Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                                         = (known after apply)
+    }
+
+[1m  # module.vpc.aws_subnet.private[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_subnet" "private" {
+      [32m+[0m [0m[1m[0marn[0m[0m                                            = (known after apply)
+      [32m+[0m [0m[1m[0massign_ipv6_address_on_creation[0m[0m                = false
+      [32m+[0m [0m[1m[0mavailability_zone[0m[0m                              = "ap-southeast-1a"
+      [32m+[0m [0m[1m[0mavailability_zone_id[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mcidr_block[0m[0m                                     = "10.0.1.0/24"
+      [32m+[0m [0m[1m[0menable_dns64[0m[0m                                   = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_a_record_on_launch[0m[0m    = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_aaaa_record_on_launch[0m[0m = false
+      [32m+[0m [0m[1m[0mid[0m[0m                                             = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_cidr_block_association_id[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_native[0m[0m                                    = false
+      [32m+[0m [0m[1m[0mmap_public_ip_on_launch[0m[0m                        = false
+      [32m+[0m [0m[1m[0mowner_id[0m[0m                                       = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_dns_hostname_type_on_launch[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                                           = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-private-ap-southeast-1a"
+          [32m+[0m [0m"Type"        = "Private Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                                       = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-private-ap-southeast-1a"
+          [32m+[0m [0m"Type"        = "Private Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                                         = (known after apply)
+    }
+
+[1m  # module.vpc.aws_subnet.private[1][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_subnet" "private" {
+      [32m+[0m [0m[1m[0marn[0m[0m                                            = (known after apply)
+      [32m+[0m [0m[1m[0massign_ipv6_address_on_creation[0m[0m                = false
+      [32m+[0m [0m[1m[0mavailability_zone[0m[0m                              = "ap-southeast-1b"
+      [32m+[0m [0m[1m[0mavailability_zone_id[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mcidr_block[0m[0m                                     = "10.0.2.0/24"
+      [32m+[0m [0m[1m[0menable_dns64[0m[0m                                   = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_a_record_on_launch[0m[0m    = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_aaaa_record_on_launch[0m[0m = false
+      [32m+[0m [0m[1m[0mid[0m[0m                                             = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_cidr_block_association_id[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_native[0m[0m                                    = false
+      [32m+[0m [0m[1m[0mmap_public_ip_on_launch[0m[0m                        = false
+      [32m+[0m [0m[1m[0mowner_id[0m[0m                                       = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_dns_hostname_type_on_launch[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                                           = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-private-ap-southeast-1b"
+          [32m+[0m [0m"Type"        = "Private Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                                       = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-private-ap-southeast-1b"
+          [32m+[0m [0m"Type"        = "Private Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                                         = (known after apply)
+    }
+
+[1m  # module.vpc.aws_subnet.public[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_subnet" "public" {
+      [32m+[0m [0m[1m[0marn[0m[0m                                            = (known after apply)
+      [32m+[0m [0m[1m[0massign_ipv6_address_on_creation[0m[0m                = false
+      [32m+[0m [0m[1m[0mavailability_zone[0m[0m                              = "ap-southeast-1a"
+      [32m+[0m [0m[1m[0mavailability_zone_id[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mcidr_block[0m[0m                                     = "10.0.101.0/24"
+      [32m+[0m [0m[1m[0menable_dns64[0m[0m                                   = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_a_record_on_launch[0m[0m    = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_aaaa_record_on_launch[0m[0m = false
+      [32m+[0m [0m[1m[0mid[0m[0m                                             = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_cidr_block_association_id[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_native[0m[0m                                    = false
+      [32m+[0m [0m[1m[0mmap_public_ip_on_launch[0m[0m                        = true
+      [32m+[0m [0m[1m[0mowner_id[0m[0m                                       = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_dns_hostname_type_on_launch[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                                           = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-public-ap-southeast-1a"
+          [32m+[0m [0m"Type"        = "Public Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                                       = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-public-ap-southeast-1a"
+          [32m+[0m [0m"Type"        = "Public Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                                         = (known after apply)
+    }
+
+[1m  # module.vpc.aws_subnet.public[1][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_subnet" "public" {
+      [32m+[0m [0m[1m[0marn[0m[0m                                            = (known after apply)
+      [32m+[0m [0m[1m[0massign_ipv6_address_on_creation[0m[0m                = false
+      [32m+[0m [0m[1m[0mavailability_zone[0m[0m                              = "ap-southeast-1b"
+      [32m+[0m [0m[1m[0mavailability_zone_id[0m[0m                           = (known after apply)
+      [32m+[0m [0m[1m[0mcidr_block[0m[0m                                     = "10.0.102.0/24"
+      [32m+[0m [0m[1m[0menable_dns64[0m[0m                                   = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_a_record_on_launch[0m[0m    = false
+      [32m+[0m [0m[1m[0menable_resource_name_dns_aaaa_record_on_launch[0m[0m = false
+      [32m+[0m [0m[1m[0mid[0m[0m                                             = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_cidr_block_association_id[0m[0m                 = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_native[0m[0m                                    = false
+      [32m+[0m [0m[1m[0mmap_public_ip_on_launch[0m[0m                        = true
+      [32m+[0m [0m[1m[0mowner_id[0m[0m                                       = (known after apply)
+      [32m+[0m [0m[1m[0mprivate_dns_hostname_type_on_launch[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                                           = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-public-ap-southeast-1b"
+          [32m+[0m [0m"Type"        = "Public Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                                       = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev-public-ap-southeast-1b"
+          [32m+[0m [0m"Type"        = "Public Subnets"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mvpc_id[0m[0m                                         = (known after apply)
+    }
+
+[1m  # module.vpc.aws_vpc.this[0][0m will be created[0m[0m
+[0m  [32m+[0m[0m resource "aws_vpc" "this" {
+      [32m+[0m [0m[1m[0marn[0m[0m                                  = (known after apply)
+      [32m+[0m [0m[1m[0massign_generated_ipv6_cidr_block[0m[0m     = false
+      [32m+[0m [0m[1m[0mcidr_block[0m[0m                           = "10.0.0.0/16"
+      [32m+[0m [0m[1m[0mdefault_network_acl_id[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mdefault_route_table_id[0m[0m               = (known after apply)
+      [32m+[0m [0m[1m[0mdefault_security_group_id[0m[0m            = (known after apply)
+      [32m+[0m [0m[1m[0mdhcp_options_id[0m[0m                      = (known after apply)
+      [32m+[0m [0m[1m[0menable_classiclink[0m[0m                   = (known after apply)
+      [32m+[0m [0m[1m[0menable_classiclink_dns_support[0m[0m       = (known after apply)
+      [32m+[0m [0m[1m[0menable_dns_hostnames[0m[0m                 = true
+      [32m+[0m [0m[1m[0menable_dns_support[0m[0m                   = true
+      [32m+[0m [0m[1m[0mid[0m[0m                                   = (known after apply)
+      [32m+[0m [0m[1m[0minstance_tenancy[0m[0m                     = "default"
+      [32m+[0m [0m[1m[0mipv6_association_id[0m[0m                  = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_cidr_block[0m[0m                      = (known after apply)
+      [32m+[0m [0m[1m[0mipv6_cidr_block_network_border_group[0m[0m = (known after apply)
+      [32m+[0m [0m[1m[0mmain_route_table_id[0m[0m                  = (known after apply)
+      [32m+[0m [0m[1m[0mowner_id[0m[0m                             = (known after apply)
+      [32m+[0m [0m[1m[0mtags[0m[0m                                 = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+      [32m+[0m [0m[1m[0mtags_all[0m[0m                             = {
+          [32m+[0m [0m"Name"        = "symbiosis_vpc_dev"
+          [32m+[0m [0m"environment" = "dev"
+          [32m+[0m [0m"owners"      = "symbiosis"
+        }
+    }
+
+[0m[1mPlan:[0m 35 to add, 0 to change, 0 to destroy.
+[0m[0m
+[1mChanges to Outputs:[0m[0m
+  [32m+[0m [0m[1m[0mclb_dns_name[0m[0m = (known after apply)
+  [32m+[0m [0m[1m[0mrds_address[0m[0m  = (known after apply)
+[0m[1mrandom_password.password: Creating...[0m[0m
+[0m[1mrandom_password.password: Creation complete after 0s [id=none][0m
+[0m[1maws_secretsmanager_secret.db_creds: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_vpc.this[0]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_eip.nat[0]: Creating...[0m[0m
+[0m[1maws_secretsmanager_secret.db_creds: Creation complete after 0s [id=arn:aws:secretsmanager:ap-southeast-1:500295128231:secret:dev-db-creds20220424152222544600000001-7IKlCv][0m
+[0m[1mdata.aws_secretsmanager_secret.db_creds: Reading...[0m[0m
+[0m[1maws_secretsmanager_secret_version.db_creds: Creating...[0m[0m
+[0m[1mdata.aws_secretsmanager_secret.db_creds: Read complete after 0s [id=arn:aws:secretsmanager:ap-southeast-1:500295128231:secret:dev-db-creds20220424152222544600000001-7IKlCv][0m
+[0m[1mdata.aws_secretsmanager_secret_version.db_creds: Reading...[0m[0m
+[0m[1mdata.aws_secretsmanager_secret_version.db_creds: Read complete after 0s [id=arn:aws:secretsmanager:ap-southeast-1:500295128231:secret:dev-db-creds20220424152222544600000001-7IKlCv|AWSCURRENT][0m
+[0m[1maws_secretsmanager_secret_version.db_creds: Creation complete after 0s [id=arn:aws:secretsmanager:ap-southeast-1:500295128231:secret:dev-db-creds20220424152222544600000001-7IKlCv|EDE5A211-2B65-4B39-AC25-5FE4A2C7EBD7][0m
+[0m[1mmodule.vpc.aws_eip.nat[0]: Creation complete after 0s [id=eipalloc-0e75b7d58111209f5][0m
+[0m[1mmodule.vpc.aws_vpc.this[0]: Still creating... [10s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_vpc.this[0]: Creation complete after 12s [id=vpc-0e0dcb5cd44aad1fb][0m
+[0m[1maws_security_group.bastion_host_sg: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_subnet.private[0]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_subnet.public[0]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_route_table.database[0]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_route_table.public[0]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_route_table.private[0]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_subnet.public[1]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_subnet.database[0]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_subnet.database[1]: Creating...[0m[0m
+[0m[1maws_security_group.elb_sg: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_route_table.database[0]: Creation complete after 0s [id=rtb-0b6d943d169557fac][0m
+[0m[1mmodule.vpc.aws_internet_gateway.this[0]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_route_table.private[0]: Creation complete after 0s [id=rtb-032ed47851b6b0f6b][0m
+[0m[1mmodule.vpc.aws_subnet.private[1]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_route_table.public[0]: Creation complete after 0s [id=rtb-05b8dc75c4603190c][0m
+[0m[1mmodule.vpc.aws_subnet.database[1]: Creation complete after 0s [id=subnet-01f2c9979cb787011][0m
+[0m[1mmodule.vpc.aws_subnet.private[0]: Creation complete after 0s [id=subnet-06c384e2c92221e9e][0m
+[0m[1mmodule.vpc.aws_subnet.database[0]: Creation complete after 0s [id=subnet-0e4109e106316b0c4][0m
+[0m[1mmodule.vpc.aws_route_table_association.database[0]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_db_subnet_group.database[0]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_route_table_association.database[1]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_internet_gateway.this[0]: Creation complete after 1s [id=igw-0ed9f2844e2cf4d2f][0m
+[0m[1mmodule.vpc.aws_route.public_internet_gateway[0]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_route_table_association.database[0]: Creation complete after 1s [id=rtbassoc-052ec2d28fec462fd][0m
+[0m[1mmodule.vpc.aws_route_table_association.database[1]: Creation complete after 1s [id=rtbassoc-0dec0385dbca56735][0m
+[0m[1mmodule.vpc.aws_subnet.private[1]: Creation complete after 1s [id=subnet-0ed9c9570b19aba0c][0m
+[0m[1mmodule.vpc.aws_route_table_association.private[0]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_route_table_association.private[1]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_route.public_internet_gateway[0]: Creation complete after 0s [id=r-rtb-05b8dc75c4603190c1080289494][0m
+[0m[1mmodule.vpc.aws_route_table_association.private[1]: Creation complete after 0s [id=rtbassoc-0688877b34080d0e1][0m
+[0m[1mmodule.vpc.aws_route_table_association.private[0]: Creation complete after 0s [id=rtbassoc-0dfe6f9357fa4a52d][0m
+[0m[1mmodule.vpc.aws_db_subnet_group.database[0]: Creation complete after 2s [id=symbiosis_vpc_dev][0m
+[0m[1maws_security_group.elb_sg: Creation complete after 2s [id=sg-0119e6bb53b7b441f][0m
+[0m[1maws_security_group.bastion_host_sg: Creation complete after 2s [id=sg-05113a876d6ff10c1][0m
+[0m[1maws_security_group.apps_instance_sg: Creating...[0m[0m
+[0m[1maws_security_group.apps_instance_sg: Creation complete after 2s [id=sg-037ab3fbe7192bbc1][0m
+[0m[1maws_security_group.mysqldb_sg: Creating...[0m[0m
+[0m[1maws_security_group.mysqldb_sg: Creation complete after 2s [id=sg-00b0962fb4b656c2e][0m
+[0m[1maws_db_instance.mysql_rds: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_subnet.public[0]: Still creating... [10s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_subnet.public[1]: Still creating... [10s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_subnet.public[0]: Creation complete after 11s [id=subnet-0e40d003131925c96][0m
+[0m[1mmodule.vpc.aws_subnet.public[1]: Creation complete after 11s [id=subnet-0a1018f8475d95da4][0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_route_table_association.public[0]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_route_table_association.public[1]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_route_table_association.public[0]: Creation complete after 0s [id=rtbassoc-0bc34af400cfe65cd][0m
+[0m[1mmodule.vpc.aws_route_table_association.public[1]: Creation complete after 0s [id=rtbassoc-029fd6621b3573f85][0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [10s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Still creating... [10s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [20s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Still creating... [20s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [30s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Still creating... [30s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [40s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Still creating... [40s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [50s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Still creating... [50s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [1m0s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Still creating... [1m0s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [1m10s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Still creating... [1m10s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [1m20s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Still creating... [1m20s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [1m30s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Still creating... [1m30s elapsed][0m[0m
+[0m[1mmodule.vpc.aws_nat_gateway.this[0]: Creation complete after 1m34s [id=nat-055f016fe80546c5a][0m
+[0m[1mmodule.vpc.aws_route.private_nat_gateway[0]: Creating...[0m[0m
+[0m[1mmodule.vpc.aws_route.private_nat_gateway[0]: Creation complete after 1s [id=r-rtb-032ed47851b6b0f6b1080289494][0m
+[0m[1maws_instance.bastion_host: Creating...[0m[0m
+[0m[1maws_elb.webapps_elb: Creating...[0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [1m40s elapsed][0m[0m
+[0m[1maws_elb.webapps_elb: Creation complete after 2s [id=webapps-dev-elb][0m
+[0m[1maws_instance.bastion_host: Still creating... [10s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [1m50s elapsed][0m[0m
+[0m[1maws_instance.bastion_host: Still creating... [20s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [2m0s elapsed][0m[0m
+[0m[1maws_instance.bastion_host: Provisioning with 'file'...[0m[0m
+[0m[1maws_instance.bastion_host: Provisioning with 'remote-exec'...[0m[0m
+[0m[1maws_instance.bastion_host (remote-exec):[0m [0mConnecting to remote host via SSH...
+[0m[1maws_instance.bastion_host (remote-exec):[0m [0m  Host: ec2-13-229-69-119.ap-southeast-1.compute.amazonaws.com
+[0m[1maws_instance.bastion_host (remote-exec):[0m [0m  User: ec2-user
+[0m[1maws_instance.bastion_host (remote-exec):[0m [0m  Password: false
+[0m[1maws_instance.bastion_host (remote-exec):[0m [0m  Private key: true
+[0m[1maws_instance.bastion_host (remote-exec):[0m [0m  Certificate: false
+[0m[1maws_instance.bastion_host (remote-exec):[0m [0m  SSH Agent: false
+[0m[1maws_instance.bastion_host (remote-exec):[0m [0m  Checking Host Key: false
+[0m[1maws_instance.bastion_host (remote-exec):[0m [0m  Target Platform: unix
+[0m[1maws_instance.bastion_host (remote-exec):[0m [0mConnected!
+[0m[1maws_instance.bastion_host: Creation complete after 30s [id=i-0e53a34b20ec79a34][0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [2m10s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [2m20s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [2m30s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [2m40s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [2m50s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [3m0s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [3m10s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [3m20s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [3m30s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [3m40s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [3m50s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [4m0s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [4m10s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [4m20s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [4m30s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [4m40s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [4m50s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [5m0s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [5m10s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [5m20s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [5m30s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [5m40s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [5m50s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [6m0s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [6m10s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [6m20s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [6m30s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [6m40s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [6m50s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [7m0s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [7m10s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [7m20s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [7m30s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [7m40s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [7m50s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [8m0s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [8m10s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [8m20s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [8m30s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [8m40s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [8m50s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [9m0s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [9m10s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [9m20s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [9m30s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [9m40s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [9m50s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [10m0s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [10m10s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [10m20s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [10m30s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [10m40s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [10m50s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [11m0s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [11m10s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [11m20s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [11m30s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [11m40s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [11m50s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [12m0s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [12m10s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [12m20s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Still creating... [12m30s elapsed][0m[0m
+[0m[1maws_db_instance.mysql_rds: Creation complete after 12m31s [id=mysql-rds-dev20220424152241388600000002][0m
+[0m[1mdata.template_file.backend_cloud_init: Reading...[0m[0m
+[0m[1mdata.template_file.backend_cloud_init: Read complete after 0s [id=79627d1805060e274e7a959bd4ecb3d7d28e63d451c662e66a0d052d6a2e05b8][0m
+[0m[1maws_launch_configuration.webapps_lc: Creating...[0m[0m
+[0m[1maws_launch_configuration.webapps_lc: Creation complete after 1s [id=symbios-webapps-dev-lc20220424153512384500000003][0m
+[0m[1maws_autoscaling_group.webapps_asg: Creating...[0m[0m
+[0m[1maws_autoscaling_group.webapps_asg: Still creating... [10s elapsed][0m[0m
+[0m[1maws_autoscaling_group.webapps_asg: Still creating... [20s elapsed][0m[0m
+[0m[1maws_autoscaling_group.webapps_asg: Still creating... [30s elapsed][0m[0m
+[0m[1maws_autoscaling_group.webapps_asg: Creation complete after 38s [id=symbios-webapps-dev-asg20220424153513124700000004][0m
+[0m[1maws_autoscaling_policy.cpu: Creating...[0m[0m
+[0m[1maws_autoscaling_policy.cpu: Creation complete after 1s [id=cpu][0m
+[0m[1m[32m
+Apply complete! Resources: 35 added, 0 changed, 0 destroyed.
+[0m[0m[1m[32m
+Outputs:
+
+[0mclb_dns_name = "webapps-dev-elb-9335716.ap-southeast-1.elb.amazonaws.com"
+rds_address = "mysql-rds-dev20220424152241388600000002.cqzincbdnrxl.ap-southeast-1.rds.amazonaws.com"
+[Pipeline] }
+[Pipeline] // withAWS
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+[Checks API] No suitable checks publisher found.
+Finished: SUCCESS
