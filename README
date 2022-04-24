@@ -53,13 +53,12 @@ b. Ensure that the necessary S3 buckets and DynamoDB table are in place to hold 
 
 c. Prepare private key for bastion host to access internal EC2 instances.  
 
-	 Under EC2 service in AWS console, under “Network and Security/Key Pairs”, download the private key to the ‘private-key’ folder.
-	 The filename must be terraform-key.pem and secure it with permission 600 as follow.  
+   Under EC2 service in AWS console, under “Network and Security/Key Pairs”, download the private key to the ‘private-key’ folder.  
+   The filename must be terraform-key.pem and secure it with permission 600 as follow.  
+   
+   Note that this assumes that a key pair already exist in the AWS console.  Since there are 3 environments, there should be 3 sets of key pairs.  But for simplicity sake, in this demo we will use one common set of key pairs.  
 
-	 Note that this assumes that a key pair already exist in the AWS console.  Since there are 3 environments, there should be 3 sets of key pairs.  
-   But for simplicity sake, in this demo we will use one common set of key pairs.  
-
-	 ➜  Symbiosis_Project git:(main) ✗ ls -al private-key
+   ➜  Symbiosis_Project git:(main) ✗ ls -al private-key
 	 total 8
 	 drwxr-xr-x   3 desmondlim  staff    96 Apr 12 21:17 .
 	 drwxr-xr-x  19 desmondlim  staff   608 Apr 19 23:28 ..
