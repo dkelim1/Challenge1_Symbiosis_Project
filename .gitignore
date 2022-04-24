@@ -1,0 +1,6 @@
+secret.tfvars
+private-key/**
+terraform.tfstate*
+terraform.tfstate.d/**
+.terraform
+.terraform.lock.hcl
