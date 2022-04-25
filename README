@@ -1,8 +1,7 @@
 README
 =======
 
-This project runs a simple NodeJS application in an Auto Scaling Group (ASG) with an Elastic Load Balancer attached.  The NodeJS application connects to a MySQL database to add/modify user' s age and email etc.  
-Dynamic Automatic Scaling is also enabled which monitors the average CPU utilization against a defined threshold and scales accordingly once the threshold is exceeded.   
+This project runs a simple NodeJS application in an Auto Scaling Group (ASG) with an Elastic Load Balancer attached.  The NodeJS application connects to a MySQL database to add/modify user' s age and email etc.  Dynamic Automatic Scaling is also enabled which monitors the average CPU utilization against a defined threshold and scales accordingly once the threshold is exceeded.   
 
 
 Assignment deliverables
@@ -15,8 +14,7 @@ Assignment deliverables
      Refer to implementation procedures below.  
 
 3. Create a CICD workflow to deploy the above application to production in an automated way. There are 3 environments - DEV, UAT, Production. Choose a tool of your choice.
-   > Refer to the folder CICD for the Jenkinsfile and artefacts.  Currently, the CICD workflow is launched from a Jenkins pod running within minikube.  If chances permit, a demo can be presented onsite together with 
-     the optional challenge.  Future enhancement will include triggering the CICD workflow directly from GitHub with Jenkins polling for changes in the GitHub repository.  
+   > Refer to the folder CICD for the Jenkinsfile and artefacts.  Currently, the CICD workflow is launched from a Jenkins pod running within minikube.  If chances permit, a demo can be presented onsite together with the optional challenge.
 
 4. Create an API to expose data saved in the database via services of your choosing, making sure the APIs are secure.
    > This will be incorporated in the future release.  
