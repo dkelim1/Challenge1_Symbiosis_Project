@@ -207,6 +207,7 @@ resource "aws_autoscaling_group" "webapps_asg" {
 
   load_balancers    = [aws_elb.webapps_elb.name]
   health_check_type = "EC2"
+  wait_for_elb_capacity = module.vars.env.min_size
 
   tag {
     key                 = "Name"
