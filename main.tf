@@ -382,7 +382,7 @@ resource "aws_db_instance" "mysql_rds" {
 
   identifier_prefix      = "mysql-rds-${terraform.workspace}"
   engine                 = "mysql"
-  allocated_storage      = 10
+  allocated_storage      = module.vars.env.db_allocated_storage
   instance_class         = module.vars.env.db_instance_class
   name                   = var.db_name
   username               = local.db_creds.db_username
