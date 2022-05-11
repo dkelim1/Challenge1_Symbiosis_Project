@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#apt-get update && apt-get install -y gnupg software-properties-common wget
 apt-get update && apt-get install -y wget
 
 echo "Installing tfswitch locally"

@@ -41,7 +41,7 @@ provider "aws" {
 
 # Importing the AWS secrets created previously using id.
 
-/*
+
 data "aws_secretsmanager_secret" "db_creds" {
   arn = aws_secretsmanager_secret.db_creds.id
 }
@@ -51,12 +51,12 @@ data "aws_secretsmanager_secret" "db_creds" {
 data "aws_secretsmanager_secret_version" "db_creds" {
   secret_id = data.aws_secretsmanager_secret.db_creds.id
 }
-*/
+
 
 # ------------------------------------------------------------------------------
 # PREPARES THE EC2 INSTANCES TERMPLATE FOR LAUNCHING
 # ------------------------------------------------------------------------------
-/*
+
 data "template_file" "backend_cloud_init" {
   template = file("cloud_init/cloud_init.sh")
   vars = {
@@ -66,7 +66,7 @@ data "template_file" "backend_cloud_init" {
     DB_NAME   = aws_db_instance.mysql_rds.name,
     DB_PORT   = aws_db_instance.mysql_rds.port
   }
-}*/
+}
 
 # ------------------------------------------------------------------------------
 # QUERIES THE AMI IN THE REGION AVAILABLE FOR USE
@@ -99,7 +99,7 @@ data "aws_ami" "amzlinux2" {
 # This resources creates a AWS secret depends on the environment the user is in.  Both db_username and db_password is managed 
 # under secrets manager.  
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/*
+
 resource "random_password" "password" {
   length           = 16
   special          = true
@@ -124,8 +124,6 @@ resource "aws_secretsmanager_secret_version" "db_creds" {
    }
   EOF
 }
-
-*/
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -152,7 +150,6 @@ resource "aws_instance" "bastion_host" {
     }
 
     source      = "./private-key/terraform-key.pem"
-   # source  = file("${path.module}/private-key/terraform-key.pem")
     destination = "/home/ec2-user/.ssh/terraform-key.pem"
   }
 
@@ -174,6 +171,101 @@ resource "aws_instance" "bastion_host" {
   }
 }
 
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CREATE A LAUNCH CONFIGURATION THAT DEFINES EACH EC2 INSTANCE IN THE ASG
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_launch_configuration" "webapps_lc" {
+
+  depends_on      = [module.vpc, aws_db_instance.mysql_rds]
+  name_prefix     = "symbios-webapps-${terraform.workspace}-lc"
+  image_id        = data.aws_ami.amzlinux2.id
+  instance_type   = module.vars.env.apps_instance_type
+  security_groups = [aws_security_group.apps_instance_sg.id]
+  key_name        = var.instance_keypair
+
+  user_data = data.template_file.backend_cloud_init.rendered
+
+
+  # Whenever using a launch configuration with an auto scaling group, you must set create_before_destroy = true.
+  # https://www.terraform.io/docs/providers/aws/r/launch_configuration.html
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CREATE THE AUTO SCALING GROUP
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_autoscaling_group" "webapps_asg" {
+
+  name_prefix          = "symbios-webapps-${terraform.workspace}-asg"
+  launch_configuration = aws_launch_configuration.webapps_lc.id
+  vpc_zone_identifier  = [module.vpc.private_subnets[0], module.vpc.private_subnets[1]]
+
+  //desired_capacity = module.vars.env.desired_capacity
+  min_size = module.vars.env.min_size
+  max_size = module.vars.env.max_size
+
+  load_balancers    = [aws_elb.webapps_elb.name]
+  health_check_type = "EC2"
+  wait_for_elb_capacity = module.vars.env.min_size
+
+  tag {
+    key                 = "Name"
+    value               = "symbios-webapps-asg"
+    propagate_at_launch = true
+  }
+}
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CREATE THE AUTO SCALING POLICY BASED ON AVERAGE CPU UTILIZATION
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_autoscaling_policy" "cpu" {
+  autoscaling_group_name = aws_autoscaling_group.webapps_asg.name
+  name                   = "cpu"
+  policy_type            = "TargetTrackingScaling"
+
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+
+    target_value = module.vars.env.target_value
+  }
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CREATE AN ELB TO ROUTE TRAFFIC ACROSS THE AUTO SCALING GROUP
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_elb" "webapps_elb" {
+  depends_on      = [module.vpc]
+  name            = "webapps-${terraform.workspace}-elb"
+  security_groups = [aws_security_group.elb_sg.id]
+  subnets         = [module.vpc.public_subnets[0], module.vpc.public_subnets[1]]
+
+  health_check {
+    target              = "HTTP:${var.nodejs_port}/"
+    interval            = 30
+    timeout             = 25
+    healthy_threshold   = 2
+    unhealthy_threshold = 10
+  }
+
+  # This adds a listener for incoming HTTP requests.
+  listener {
+    lb_port           = var.elb_port
+    lb_protocol       = "http"
+    instance_port     = var.nodejs_port
+    instance_protocol = "http"
+  }
+}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # CREATE A SECURITY GROUP THAT CONTROLS WHAT TRAFFIC AN GO IN AND OUT OF THE ELB
@@ -260,6 +352,7 @@ resource "aws_security_group" "apps_instance_sg" {
   }
 }
 
+
 # ---------------------------------------------------------------------------------------------------------------------
 # CREATE THE SECURITY GROUP THAT'S APPLIED TO THE MYSQL RDS DB
 # ---------------------------------------------------------------------------------------------------------------------
@@ -286,3 +379,28 @@ resource "aws_security_group" "mysqldb_sg" {
   }
 
 }
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CREATE THE MYSQL RDS DB
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_db_instance" "mysql_rds" {
+
+  identifier_prefix      = "mysql-rds-${terraform.workspace}"
+  engine                 = "mysql"
+  allocated_storage      = module.vars.env.db_allocated_storage
+  instance_class         = module.vars.env.db_instance_class
+  name                   = var.db_name
+  username               = local.db_creds.db_username
+  password               = local.db_creds.db_password
+  multi_az               = module.vars.env.db_multi_az
+  db_subnet_group_name   = module.vpc.database_subnet_group_name
+  vpc_security_group_ids = [aws_security_group.mysqldb_sg.id]
+
+  # Don't copy this to your production examples. It's only here to make it quicker to delete this DB.
+  skip_final_snapshot = true
+
+}
+
+
