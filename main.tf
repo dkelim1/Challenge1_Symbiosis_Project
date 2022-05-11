@@ -143,10 +143,12 @@ resource "aws_instance" "bastion_host" {
     connection {
       user        = "ec2-user"
       host        = aws_instance.bastion_host.public_dns
-      private_key = file("./private-key/terraform-key.pem")
+      #private_key = file("./private-key/terraform-key.pem")
+      private_key  = file("${path.module}/private-key/terraform-key.pem")
     }
 
-    source      = "./private-key/terraform-key.pem"
+    #source      = "./private-key/terraform-key.pem"
+    source  = file("${path.module}/private-key/terraform-key.pem")
     destination = "/home/ec2-user/.ssh/terraform-key.pem"
   }
 
@@ -154,7 +156,8 @@ resource "aws_instance" "bastion_host" {
     connection {
       user        = "ec2-user"
       host        = aws_instance.bastion_host.public_dns
-      private_key = file("./private-key/terraform-key.pem")
+      #private_key = file("./private-key/terraform-key.pem")
+      private_key  = file("${path.module}/private-key/terraform-key.pem")
     }
 
     inline = [
