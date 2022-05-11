@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/sh
 
 apt-get update && apt-get install -y gnupg software-properties-common wget
 
