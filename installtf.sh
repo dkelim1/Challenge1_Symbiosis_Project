@@ -1,12 +1,14 @@
-#!/bin/bash 
+#!/bin/bash
+
+apt-get update && apt-get install -y gnupg software-properties-common wget
 
 echo "Installing tfswitch locally"
 wget https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh  #Get the installer on to your machine
 
-chmod 755 install.sh #Make installer executable
+chmod 755 install.sh 
 
-./install.sh -b ${WORKSPACE}      #Install tfswitch in a location you have permission
+./install.sh -b .      
 
-${WORKSPACE}/tfswitch -b ${WORKSPACE}/terraform #or simply tfswitch -b $CUSTOMBIN/terraform 0.11.7
+./tfswitch -b terraform 
 
-${WORKSPACE}/terraform -v                    #testing version
+./terraform -v    
