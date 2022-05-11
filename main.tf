@@ -41,6 +41,7 @@ provider "aws" {
 
 # Importing the AWS secrets created previously using id.
 
+/*
 data "aws_secretsmanager_secret" "db_creds" {
   arn = aws_secretsmanager_secret.db_creds.id
 }
@@ -50,11 +51,12 @@ data "aws_secretsmanager_secret" "db_creds" {
 data "aws_secretsmanager_secret_version" "db_creds" {
   secret_id = data.aws_secretsmanager_secret.db_creds.id
 }
+*/
 
 # ------------------------------------------------------------------------------
 # PREPARES THE EC2 INSTANCES TERMPLATE FOR LAUNCHING
 # ------------------------------------------------------------------------------
-
+/*
 data "template_file" "backend_cloud_init" {
   template = file("cloud_init/cloud_init.sh")
   vars = {
@@ -64,7 +66,7 @@ data "template_file" "backend_cloud_init" {
     DB_NAME   = aws_db_instance.mysql_rds.name,
     DB_PORT   = aws_db_instance.mysql_rds.port
   }
-}
+}*/
 
 # ------------------------------------------------------------------------------
 # QUERIES THE AMI IN THE REGION AVAILABLE FOR USE
@@ -97,7 +99,7 @@ data "aws_ami" "amzlinux2" {
 # This resources creates a AWS secret depends on the environment the user is in.  Both db_username and db_password is managed 
 # under secrets manager.  
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+/*
 resource "random_password" "password" {
   length           = 16
   special          = true
@@ -120,8 +122,10 @@ resource "aws_secretsmanager_secret_version" "db_creds" {
     "db_username": "admin",
     "db_password": "${random_password.password.result}"
    }
-EOF
+  EOF
 }
+
+*/
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -147,8 +151,8 @@ resource "aws_instance" "bastion_host" {
       private_key  = file("${path.module}/private-key/terraform-key.pem")
     }
 
-    #source      = "./private-key/terraform-key.pem"
-    source  = file("${path.module}/private-key/terraform-key.pem")
+    source      = "./private-key/terraform-key.pem"
+   # source  = file("${path.module}/private-key/terraform-key.pem")
     destination = "/home/ec2-user/.ssh/terraform-key.pem"
   }
 
