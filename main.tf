@@ -145,7 +145,6 @@ resource "aws_instance" "bastion_host" {
     connection {
       user        = "ec2-user"
       host        = aws_instance.bastion_host.public_dns
-      #private_key = file("./private-key/terraform-key.pem")
       private_key  = file("${path.module}/private-key/terraform-key.pem")
     }
 
@@ -157,7 +156,6 @@ resource "aws_instance" "bastion_host" {
     connection {
       user        = "ec2-user"
       host        = aws_instance.bastion_host.public_dns
-      #private_key = file("./private-key/terraform-key.pem")
       private_key  = file("${path.module}/private-key/terraform-key.pem")
     }
 
