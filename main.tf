@@ -202,7 +202,8 @@ resource "aws_autoscaling_group" "webapps_asg" {
 
   name_prefix          = "symbios-webapps-${terraform.workspace}-asg"
   launch_configuration = aws_launch_configuration.webapps_lc.id
-  vpc_zone_identifier  = [module.vpc.private_subnets[0], module.vpc.private_subnets[1]]
+  #vpc_zone_identifier  = [module.vpc.private_subnets[0], module.vpc.private_subnets[1]]
+  vpc_zone_identifier  = [module.vpc.public_subnets[0], module.vpc.public_subnets[1]]
 
   //desired_capacity = module.vars.env.desired_capacity
   min_size = module.vars.env.min_size
